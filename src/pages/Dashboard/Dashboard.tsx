@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/NavBar/NavBar";
+import NavBar from "../../components/NavBar";
 import { Company, ApiResponse, SuccessApiResponse } from "../../models/types";
 
 const Dashboard: React.FC = () => {
@@ -53,93 +53,31 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div>
-      <NavBar isLoggedIn={isLoggedIn} />
-      <h1>Dashboard Page</h1>
-      <div>
-        <h2>Companies</h2>
-        <select
-          onChange={handleSelectChange}
-          value={selectedCompany?._id || ""}
-        >
-          <option value="">Select a company</option>
-          {companies.map((company) => (
-            <option key={company._id} value={company._id}>
-              {company.name}
-            </option>
-          ))}
-        </select>
-        {selectedCompany && (
-          <div>
-            <h3>Company Details</h3>
-            <table>
-              <tbody>
-                <tr>
-                  <td>ID</td>
-                  <td>{selectedCompany.companyID}</td>
-                </tr>
-                <tr>
-                  <td>Name</td>
-                  <td>{selectedCompany.name}</td>
-                </tr>
-                <tr>
-                  <td>Users</td>
-                  <td>
-                    {Array.isArray(selectedCompany.users) ? (
-                      selectedCompany.users.map((user, index) =>
-                        typeof user === "string" ? (
-                          <span key={index}>{user}</span>
-                        ) : (
-                          <span
-                            key={user._id}
-                          >{`${user.firstName} ${user.lastName}`}</span>
-                        )
-                      )
-                    ) : (
-                      <span>{selectedCompany.users}</span>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Instances</td>
-                  <td>
-                    {Array.isArray(selectedCompany.instances) ? (
-                      selectedCompany.instances.map((instance, index) =>
-                        typeof instance === "string" ? (
-                          <span key={index}>{instance}</span>
-                        ) : (
-                          <span key={instance._id}>{instance.name}</span>
-                        )
-                      )
-                    ) : (
-                      <span>selectedCompany.instances</span>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Connections</td>
-                  <td>
-                    {Array.isArray(selectedCompany.connections) ? (
-                      selectedCompany.connections.map((connection, index) =>
-                        typeof connection === "string" ? (
-                          <span key={index}>{connection}</span>
-                        ) : (
-                          <span key={connection._id}>{connection.name}</span>
-                        )
-                      )
-                    ) : (
-                      <span>{selectedCompany.connections}</span>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Active</td>
-                  <td>{selectedCompany.active}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
+    <div className="flex">
+      <div className="w-64">
+        {" "}
+        {/* Adjust width as needed */}
+        <NavBar isLoggedIn={isLoggedIn} />
+      </div>
+      <div className="flex-grow p-4">
+        {" "}
+        {/* Content area with padding */}
+        <h1>Dashboard Page</h1>
+        <div>
+          <h2>Companies</h2>
+          <select
+            onChange={handleSelectChange}
+            value={selectedCompany?._id || ""}
+          >
+            <option value="">Select a company</option>
+            {companies.map((company) => (
+              <option key={company._id} value={company._id}>
+                {company.name}
+              </option>
+            ))}
+          </select>
+          {selectedCompany && <div>{/* Company details */}</div>}
+        </div>
       </div>
     </div>
   );

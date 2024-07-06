@@ -1,6 +1,6 @@
 // CompanySelect.tsx
 import React from "react";
-import { Company } from "../../models/types";
+import { Company } from "../models/types";
 
 interface CompanySelectProps {
   companies: Company[];
@@ -14,7 +14,11 @@ const CompanySelect: React.FC<CompanySelectProps> = ({
   onSelectChange,
 }) => {
   return (
-    <select onChange={onSelectChange} value={selectedCompanyId}>
+    <select
+      onChange={onSelectChange}
+      value={selectedCompanyId}
+      className="px-5 py-3 bg-gray-800 text-white hover:bg-gray-700"
+    >
       <option value="">Select a company</option>
       {companies.map((company) => (
         <option key={company._id} value={company._id}>
