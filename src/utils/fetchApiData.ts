@@ -9,17 +9,17 @@ function isSuccessApiResponse<T>(
 
 async function fetchApiData<T>(
   url: string,
-  params: object
-): Promise<T | "UNAUTHORIZED" | null> {
-  const token = localStorage.getItem("token");
+  params: object,
+  token: string | null // Add token parameter
+): Promise<T | null> {
   if (!token) {
-    return "UNAUTHORIZED";
+    return null;
   }
 
   try {
     const response = await axios.get<ApiResponse>(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
       params,
     });
@@ -31,7 +31,10 @@ async function fetchApiData<T>(
       return null;
     }
   } catch (error) {
-    console.error("There was an error fetching the data", error);
+    console.error(
+      "There was an error fetching the data or no data retrieved",
+      error
+    );
     return null;
   }
 }

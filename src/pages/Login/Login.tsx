@@ -1,39 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { loginUser } from "../../services/authService";
+import Login from "../../components/Login";
+import NavBar from "../../components/NavBar";
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async () => {
-    const loginSuccessful = await loginUser(email, password);
-    if (loginSuccessful) {
-      navigate("/");
-    } else {
-      alert("Login failed");
-    }
-  };
-
+const LoginPage = () => {
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Log In</button>
+    <div className="flex min-h-screen bg-gray-700">
+      <div className="w-1/4">
+        <NavBar />
+      </div>
+      <div className="flex flex-col justify-start items-center w-3/4 pt-10">
+        <Login />
+      </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;

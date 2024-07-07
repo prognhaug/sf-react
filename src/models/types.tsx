@@ -27,9 +27,9 @@ interface Instance {
   _id: string;
   name: string;
   connections: string[] | Connection[];
-  solutionID: string;
-  config: string;
-  history: string;
+  solutionID: string | Solution;
+  config: string | Record<string, unknown>;
+  history: string | Event[];
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -43,7 +43,7 @@ interface Connection {
   clientSecret: string;
   subscriptionKey: string;
   tenantID: string;
-  systemID: string;
+  systemID: string | System;
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -122,6 +122,12 @@ type ApiResponse =
   | FailApiResponse
   | ErrorApiResponse;
 
+// Authentication interface
+interface Auth {
+  isLoggedIn: boolean;
+  user?: User;
+}
+
 export type {
   Company,
   ApiResponse,
@@ -134,4 +140,5 @@ export type {
   Solution,
   System,
   Event,
+  Auth,
 };

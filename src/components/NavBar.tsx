@@ -1,89 +1,158 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
-import { useNavigate, Link, NavigateFunction } from "react-router-dom";
-import CompanySelect from "./CompanySelect";
-import { CompanyContext } from "./CompanyContext"; // Import the context
-interface NavBarProps {
-  isLoggedIn: boolean;
-}
-// Refactor handleLogout to accept navigate as an argument with type NavigateFunction
-const handleLogout = (navigate: NavigateFunction) => {
-  // Clear user session or token from local storage
-  localStorage.removeItem("token");
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { fetchApiData } from "../utils/fetchApiData";
+import { Company, Instance } from "../models/types";
+import { CompanyContext } from "../context/CompanyContext";
+import { InstanceContext } from "../context/InstanceContext";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
-  // Navigate to the home page
-  navigate("/");
-
-  // Update the isLoggedIn state in the parent component, if applicable
-  // This might require lifting state up or using a global state management solution
-};
-
-const NavBar = ({ isLoggedIn }: NavBarProps) => {
+const NavBar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const { setInstances } = useContext(InstanceContext);
+  const { company, setCompany } = useContext(CompanyContext);
+  const [selectedCompanyName, setSelectedCompanyName] =
+    useState("Choose Company");
+  const isAuthenticated = useIsAuthenticated();
+  const authHeader = useAuthHeader();
+  const signOut = useSignOut();
   const navigate = useNavigate();
-  const [companies, setCompanies] = useState([]);
-  const { selectedCompanyId, setSelectedCompanyId } =
-    useContext(CompanyContext); // Use context
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get("/api/companies/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => {
-          setCompanies(response.data.result.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching companies", error);
-        });
-    } else {
-      navigate("/login");
-    }
-  }, [navigate]);
+    if (!isAuthenticated) return;
+    const fetchCompanies = async () => {
+      try {
+        const response = await fetchApiData<Company[]>(
+          "/api/companies/all",
+          {},
+          authHeader
+        );
+        if (response !== null) {
+          setCompanies(response);
+        } else {
+          console.error("Failed to fetch companies or unauthorized");
+        }
+      } catch (error) {
+        console.error("Failed to fetch companies:", error);
+      }
+    };
+    fetchCompanies();
+  }, [isAuthenticated, authHeader]);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCompanyId(event.target.value);
-  };
+  // Fetch instances only when selectedCompanyName changes and meets conditions
+  useEffect(() => {
+    if (!isAuthenticated || selectedCompanyName === "Choose Company") return;
+    const fetchInstances = async () => {
+      const company = companies.find((c) => c.name === selectedCompanyName);
+      if (!company) return;
+      try {
+        const response = await fetchApiData<Instance[] | null>(
+          `/api/instances/${company.companyID}`,
+          {},
+          authHeader
+        );
+        console.log(response);
+        if (response === null) {
+          setInstances([]);
+          return;
+        } else if (response !== null) {
+          setInstances(response);
+        } else {
+          console.error("Failed to fetch instances or unauthorized");
+        }
+      } catch (error) {
+        console.error("Failed to fetch instances:", error);
+      }
+    };
+    fetchInstances();
+  }, [
+    isAuthenticated,
+    selectedCompanyName,
+    companies,
+    authHeader,
+    setInstances,
+  ]);
+
+  // Optionally, handle selectedCompanyName update based on company changes
+  useEffect(() => {
+    setSelectedCompanyName(company?.name || "Choose Company");
+  }, [company]);
+
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   return (
     <nav className="w-64 h-screen bg-gray-800 text-white flex flex-col">
-      <div className="px-5 py-3 hover:bg-gray-700">
-        {isLoggedIn && (
-          <CompanySelect
-            companies={companies}
-            selectedCompanyId={selectedCompanyId}
-            onSelectChange={handleSelectChange}
-          />
-        )}
-      </div>
-      <Link to="/" className="px-5 py-3 hover:bg-gray-700">
-        Home
-      </Link>
-      {isLoggedIn && (
-        <Link to="/setup" className="px-5 py-3 hover:bg-gray-700">
-          Setup
-        </Link>
+      {isAuthenticated && (
+        <>
+          <div className="relative">
+            <button
+              onClick={toggleDropdown}
+              className="px-5 py-3 w-full text-left hover:bg-gray-700"
+            >
+              {selectedCompanyName}{" "}
+              {/* Display the selected company's name or "Choose Company" */}
+            </button>
+            {isDropdownOpen && (
+              <div>
+                <button className="absolute left-0 bg-gray-800 w-full">
+                  {companies.map((company) => (
+                    <div
+                      key={company._id}
+                      className="px-5 py-3 hover:bg-gray-700 block"
+                      onClick={() => {
+                        setCompany(company);
+                        setSelectedCompanyName(company.name);
+                        toggleDropdown();
+                      }}
+                    >
+                      {company.name}
+                    </div>
+                  ))}
+                </button>
+              </div>
+            )}
+          </div>
+          <Link
+            to="/setup"
+            className={`px-5 py-3 ${
+              isActive("/setup") ? "bg-gray-700" : "hover:bg-gray-700"
+            }`}
+          >
+            Setup
+          </Link>
+          <Link
+            to="/dashboard"
+            className={`px-5 py-3 ${
+              isActive("/dashboard") ? "bg-gray-700" : "hover:bg-gray-700"
+            }`}
+          >
+            Dashboard
+          </Link>
+        </>
       )}
-      {isLoggedIn && (
-        <Link to="/dashboard" className="px-5 py-3 hover:bg-gray-700">
-          Dashboard
-        </Link>
-      )}
-      {!isLoggedIn ? (
-        <Link to="/login" className="px-5 py-3 hover:bg-gray-700">
-          Log In
-        </Link>
-      ) : (
-        <span className="px-5 py-3">Welcome!</span>
-      )}
-      {isLoggedIn && (
+      {isAuthenticated ? (
         <button
-          onClick={() => handleLogout(navigate)}
           className="px-5 py-3 hover:bg-gray-700 text-left"
+          onClick={() => {
+            signOut();
+            navigate("/login");
+          }}
         >
           Log Out
         </button>
+      ) : (
+        <Link
+          to="/login"
+          className={`px-5 py-3 ${
+            isActive("/login") ? "bg-gray-700" : "hover:bg-gray-700"
+          }`}
+        >
+          Log In
+        </Link>
       )}
     </nav>
   );
