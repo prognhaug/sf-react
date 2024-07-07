@@ -1,32 +1,42 @@
 import React from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const signIn = useSignIn();
   const [formData, setFormData] = React.useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios.post("/api/auth/login", formData).then((res) => {
-      if (res.status === 200) {
-        if (
-          signIn({
-            auth: {
-              token: res.data.result.data.accessToken,
-              type: "Bearer",
-            },
-            userState: res.data.result.data.administrator,
-          })
-        ) {
-          navigate("/dashboard");
-        } else {
-          //Throw error
-        }
+    try {
+      const res = await axios.post("/api/auth/login", formData);
+      if (
+        res.status === 200 &&
+        signIn({
+          auth: {
+            token: res.data.result.data.accessToken,
+            type: "Bearer",
+          },
+          userState: res.data.result.data.administrator,
+        })
+      ) {
+        navigate("/dashboard");
+      } else {
+        alert("Invalid login credentials. Please try again.");
       }
-    });
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response && axiosError.response.status === 401) {
+        alert("Invalid login credentials. Please try again.");
+      } else if (axiosError.request) {
+        alert("Network error. Please check your connection and try again.");
+      } else {
+        alert("An unexpected error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
