@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { fetchApiData } from "../../utils/fetchApiData";
-import { System } from "../../models/types";
+import { fetchApiData } from "../utils/fetchApiData";
+import { System } from "../models/types";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 interface SystemSelectProps {
   selectedSystemId: string;
@@ -12,10 +13,15 @@ const SystemSelect: React.FC<SystemSelectProps> = ({
   onSelectChange,
 }) => {
   const [systems, setSystems] = useState<System[]>([]);
+  const authHeader = useAuthHeader();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchApiData<System[]>("/api/systems/all", {});
+      const data = await fetchApiData<System[]>(
+        "/api/systems/all",
+        {},
+        authHeader
+      );
       if (data !== "UNAUTHORIZED" && data !== null) {
         setSystems(data);
       } else {
@@ -24,7 +30,7 @@ const SystemSelect: React.FC<SystemSelectProps> = ({
     };
 
     fetchData();
-  }, []);
+  }, [authHeader, setSystems]);
 
   return (
     <select onChange={onSelectChange} value={selectedSystemId}>

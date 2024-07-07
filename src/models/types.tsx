@@ -122,6 +122,12 @@ type ApiResponse =
   | FailApiResponse
   | ErrorApiResponse;
 
+// Authentication interface
+interface Auth {
+  isLoggedIn: boolean;
+  user?: User;
+}
+
 export type {
   Company,
   ApiResponse,
@@ -134,4 +140,5 @@ export type {
   Solution,
   System,
   Event,
+  Auth,
 };

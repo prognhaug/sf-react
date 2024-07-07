@@ -1,21 +1,38 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
+import LoginPage from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Setup from "./pages/Setup/Setup";
 import "./index.css";
+import AuthProvider from "react-auth-kit";
+import createStore from "react-auth-kit/createStore";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/setup" element={<Setup />} />
-      </Routes>
-    </Router>
-  );
+import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
+interface IUserData {
+  name: string;
+  uuid: string;
 }
 
-export default App;
+const store = createStore<IUserData>({
+  authName: "_auth",
+  authType: "cookie",
+  cookieDomain: window.location.hostname,
+  cookieSecure: false,
+});
+
+export default function App() {
+  return (
+    <AuthProvider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route element={<AuthOutlet fallbackPath="/login" />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/setup" element={<Setup />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}

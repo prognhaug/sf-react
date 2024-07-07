@@ -9,9 +9,9 @@ function isSuccessApiResponse<T>(
 
 async function fetchApiData<T>(
   url: string,
-  params: object
+  params: object,
+  token: string | null // Add token parameter
 ): Promise<T | "UNAUTHORIZED" | null> {
-  const token = localStorage.getItem("token");
   if (!token) {
     return "UNAUTHORIZED";
   }
@@ -19,7 +19,7 @@ async function fetchApiData<T>(
   try {
     const response = await axios.get<ApiResponse>(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
       params,
     });

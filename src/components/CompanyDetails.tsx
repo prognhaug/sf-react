@@ -1,5 +1,5 @@
 import React from "react";
-import { Company } from "../../models/types";
+import { Company } from "../models/types";
 
 const CompanyDetails: React.FC<{ company: Company }> = ({ company }) => {
   return (

@@ -2,10 +2,8 @@ import NavBar from "../../components/NavBar"; // Adjust the import path based on
 
 const Setup = () => {
   return (
-    <div>
-      <NavBar isLoggedIn={true} />{" "}
-      {/* Assuming isLoggedIn prop is required for NavBar */}
-      {/* Setup page content will go here */}
+    <div className="flex">
+      <NavBar />
     </div>
   );
 };
