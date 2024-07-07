@@ -1,10 +1,13 @@
 import NavBar from "../../components/NavBar";
 import CompanyDetails from "../../components/CompanyDetails";
+import InstanceCard from "../../components/InstanceCard";
 import { CompanyContext } from "../../context/CompanyContext";
 import { useContext } from "react";
+import { InstanceContext } from "../../context/InstanceContext";
 
 const Setup = () => {
   const { company } = useContext(CompanyContext);
+  const { instances } = useContext(InstanceContext);
   return (
     <div className="flex min-h-screen bg-gray-700">
       <div className="w-64">
@@ -13,7 +16,27 @@ const Setup = () => {
       <div className="flex-1 flex flex-col items-center">
         <h1 className="text-white mt-4 mb-2">Setup Page</h1>
         <div className="w-full p-4">
-          {company && <CompanyDetails company={company} />}
+          {company && (
+            <div>
+              <h2 className="text-white mb-2">Company Details</h2>
+              <CompanyDetails company={company} />
+            </div>
+          )}
+          {instances && instances.length > 0 && (
+            <div>
+              <h2 className="text-white mb-2">Instances</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {instances.map((instance, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-700 p-2 rounded-lg shadow-md"
+                  >
+                    <InstanceCard instance={instance} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { fetchApiData } from "../utils/fetchApiData";
-import { Company } from "../models/types";
+import { Company, Instance } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
+import { InstanceContext } from "../context/InstanceContext";
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const { setInstances } = useContext(InstanceContext);
   const { setCompany } = useContext(CompanyContext);
   const [selectedCompanyName, setSelectedCompanyName] =
     useState("Choose Company");
@@ -16,7 +18,7 @@ const NavBar = () => {
   const authHeader = useAuthHeader();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCompanies = async () => {
       if (isAuthenticated) {
         try {
           const response = await fetchApiData<Company[]>(
@@ -34,9 +36,37 @@ const NavBar = () => {
         }
       }
     };
+    const fetchInstances = async () => {
+      if (isAuthenticated && selectedCompanyName !== "Choose Company") {
+        try {
+          const company = companies.find((c) => c.name === selectedCompanyName);
+          if (company) {
+            const response = await fetchApiData<Instance[]>(
+              `/api/instances/${company.companyID}`,
+              { fields: "solutionID" },
+              authHeader
+            );
+            if (response !== "UNAUTHORIZED" && response !== null) {
+              setInstances(response);
+            } else {
+              console.error("Failed to fetch instances or unauthorized");
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch instances:", error);
+        }
+      }
+    };
 
-    fetchData();
-  }, [isAuthenticated, authHeader]);
+    fetchInstances();
+    fetchCompanies();
+  }, [
+    isAuthenticated,
+    authHeader,
+    selectedCompanyName,
+    companies,
+    setInstances,
+  ]);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
@@ -81,7 +111,7 @@ const NavBar = () => {
         </>
       )}
       {isAuthenticated ? (
-        <Link to="/logout" className="px-5 py-3 hover:bg-gray-700">
+        <Link to="/login" className="px-5 py-3 hover:bg-gray-700">
           Log Out
         </Link>
       ) : (
