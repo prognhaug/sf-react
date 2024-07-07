@@ -11,9 +11,9 @@ async function fetchApiData<T>(
   url: string,
   params: object,
   token: string | null // Add token parameter
-): Promise<T | "UNAUTHORIZED" | null> {
+): Promise<T | null> {
   if (!token) {
-    return "UNAUTHORIZED";
+    return null;
   }
 
   try {
@@ -31,7 +31,10 @@ async function fetchApiData<T>(
       return null;
     }
   } catch (error) {
-    console.error("There was an error fetching the data", error);
+    console.error(
+      "There was an error fetching the data or no data retrieved",
+      error
+    );
     return null;
   }
 }

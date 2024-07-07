@@ -22,7 +22,7 @@ const Login = () => {
           userState: res.data.result.data.administrator,
         })
       ) {
-        navigate("/dashboard");
+        navigate("/setup");
       } else {
         alert("Invalid login credentials. Please try again.");
       }
