@@ -3,9 +3,10 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { fetchApiData } from "../utils/fetchApiData";
-import { Company, Instance } from "../models/types";
+import { Company, Instance, Connection } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
 import { InstanceContext } from "../context/InstanceContext";
+import { ConnectionContext } from "../context/ConnectionContext";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 const NavBar = () => {
@@ -13,6 +14,7 @@ const NavBar = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const { setInstances } = useContext(InstanceContext);
   const { company, setCompany } = useContext(CompanyContext);
+  const { setConnections } = useContext(ConnectionContext);
   const [selectedCompanyName, setSelectedCompanyName] =
     useState("Choose Company");
   const isAuthenticated = useIsAuthenticated();
@@ -52,7 +54,7 @@ const NavBar = () => {
       try {
         const response = await fetchApiData<Instance[] | null>(
           `/api/instances/${company.companyID}`,
-          {},
+          { fields: "solutionID" },
           authHeader
         );
         console.log(response);
@@ -68,6 +70,29 @@ const NavBar = () => {
         console.error("Failed to fetch instances:", error);
       }
     };
+    const fetchConnections = async () => {
+      const company = companies.find((c) => c.name === selectedCompanyName);
+      if (!company) return;
+      try {
+        const response = await fetchApiData<Connection[] | null>(
+          `/api/connections/${company.companyID}`,
+          { fields: "systemID" },
+          authHeader
+        );
+        console.log(response);
+        if (response === null) {
+          setConnections([]);
+          return;
+        } else if (response !== null) {
+          setConnections(response);
+        } else {
+          console.error("Failed to fetch connections or unauthorized");
+        }
+      } catch (error) {
+        console.error("Failed to fetch connections:", error);
+      }
+    };
+    fetchConnections();
     fetchInstances();
   }, [
     isAuthenticated,
@@ -75,6 +100,7 @@ const NavBar = () => {
     companies,
     authHeader,
     setInstances,
+    setConnections,
   ]);
 
   // Optionally, handle selectedCompanyName update based on company changes

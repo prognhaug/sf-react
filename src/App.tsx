@@ -11,6 +11,8 @@ import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import { useState } from "react";
 import { CompanyContext } from "./context/CompanyContext";
 import { InstanceContext } from "./context/InstanceContext";
+import { Connection } from "./models/types";
+import { ConnectionContext } from "./context/ConnectionContext";
 interface IUserData {
   name: string;
   uuid: string;
@@ -26,21 +28,26 @@ const store = createStore<IUserData>({
 export default function App() {
   const [company, setCompany] = useState<Company | undefined>(undefined);
   const [instances, setInstances] = useState<Instance[] | undefined>(undefined);
+  const [connections, setConnections] = useState<Connection[] | undefined>(
+    undefined
+  );
 
   return (
     <AuthProvider store={store}>
       <CompanyContext.Provider value={{ company, setCompany }}>
         <InstanceContext.Provider value={{ instances, setInstances }}>
-          <Router>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route element={<AuthOutlet fallbackPath="/login" />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/setup" element={<Setup />} />
-              </Route>
-            </Routes>
-          </Router>
+          <ConnectionContext.Provider value={{ connections, setConnections }}>
+            <Router>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route element={<AuthOutlet fallbackPath="/login" />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/setup" element={<Setup />} />
+                </Route>
+              </Routes>
+            </Router>
+          </ConnectionContext.Provider>
         </InstanceContext.Provider>
       </CompanyContext.Provider>
     </AuthProvider>
