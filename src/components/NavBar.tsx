@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { fetchApiData } from "../utils/fetchApiData";
+import { fetchApiData } from "../utils/apiHandler";
 import { Company, Instance, Connection } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
 import { InstanceContext } from "../context/InstanceContext";

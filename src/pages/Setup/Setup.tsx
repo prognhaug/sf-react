@@ -3,11 +3,25 @@ import CompanyDetails from "../../components/CompanyDetails";
 import InstanceCard from "../../components/InstanceCard";
 import ConnectionCard from "../../components/ConnectionCard";
 import { CompanyContext } from "../../context/CompanyContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { InstanceContext } from "../../context/InstanceContext";
 import { ConnectionContext } from "../../context/ConnectionContext";
+import InstanceForm from "../../components/InstanceForm";
+import ConnectionForm from "../../components/ConnectionForm";
 
 const Setup = () => {
+  const [showInstanceForm, setShowInstanceForm] = useState(false);
+  const [showConnectionForm, setShowConnectionForm] = useState(false);
+
+  const toggleInstanceForm = () => {
+    setShowInstanceForm(true);
+    setShowConnectionForm(false);
+  };
+
+  const toggleConnectionForm = () => {
+    setShowConnectionForm(true);
+    setShowInstanceForm(false);
+  };
   const { company } = useContext(CompanyContext);
   const { instances } = useContext(InstanceContext);
   const { connections } = useContext(ConnectionContext);
@@ -28,7 +42,9 @@ const Setup = () => {
           )}
           {instances && instances.length > 0 && (
             <div>
-              <h2 className="text-white mb-2">Instances</h2>
+              <h2 className="text-white mb-2">
+                Instances <button onClick={toggleInstanceForm}>+</button>
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {instances.map((instance, index) => (
                   <div
@@ -43,7 +59,9 @@ const Setup = () => {
           )}
           {connections && connections.length > 0 && (
             <div>
-              <h2 className="text-white mb-2">connections</h2>
+              <h2 className="text-white mb-2">
+                Connections <button onClick={toggleConnectionForm}>+</button>
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {connections.map((connection, index) => (
                   <div
@@ -56,6 +74,8 @@ const Setup = () => {
               </div>
             </div>
           )}
+          {showInstanceForm && <InstanceForm />}
+          {showConnectionForm && <ConnectionForm />}
         </div>
       </div>
     </div>

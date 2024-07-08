@@ -26,7 +26,7 @@ interface User {
 interface Instance {
   _id: string;
   name: string;
-  connections: string[] | Connection[];
+  connections: string[];
   solutionID: string | Solution;
   config: string | Record<string, unknown>;
   history: string | Event[];
@@ -34,6 +34,10 @@ interface Instance {
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+interface InstanceExpanded extends Omit<Instance, "connections"> {
+  connections: Connection[];
 }
 
 interface Connection {
@@ -128,6 +132,16 @@ interface Auth {
   user?: User;
 }
 
+interface FieldConfig {
+  label: string;
+  type: string;
+  name: string;
+}
+
+interface FormFieldsConfig {
+  [key: string]: FieldConfig[]; // This says every string key maps to an array of FieldConfig
+}
+
 export type {
   Company,
   ApiResponse,
@@ -141,4 +155,7 @@ export type {
   System,
   Event,
   Auth,
+  InstanceExpanded,
+  FieldConfig,
+  FormFieldsConfig,
 };

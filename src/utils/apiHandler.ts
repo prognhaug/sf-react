@@ -39,4 +39,36 @@ async function fetchApiData<T>(
   }
 }
 
-export { fetchApiData };
+async function postApiData<T>(
+  url: string,
+  body: object,
+  token: string | null
+): Promise<boolean | null> {
+  if (!token) {
+    return null;
+  }
+
+  try {
+    console.log(body);
+    const response = await axios.post<ApiResponse>(url, body, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (isSuccessApiResponse<T>(response.data)) {
+      return true;
+    } else {
+      console.error("Failed to post data");
+      return false;
+    }
+  } catch (error) {
+    console.error(
+      "There was an error posting the data or no data retrieved",
+      error
+    );
+    return null;
+  }
+}
+
+export { fetchApiData, postApiData };
