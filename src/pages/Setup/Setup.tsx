@@ -22,6 +22,14 @@ const Setup = () => {
     setShowConnectionForm(true);
     setShowInstanceForm(false);
   };
+
+  const handleCloseConnectionForm = () => {
+    setShowConnectionForm(false);
+  };
+
+  const handleCloseInstanceForm = () => {
+    setShowInstanceForm(false);
+  };
   const { company } = useContext(CompanyContext);
   const { instances } = useContext(InstanceContext);
   const { connections } = useContext(ConnectionContext);
@@ -47,10 +55,7 @@ const Setup = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {instances.map((instance, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-700 p-2 rounded-lg shadow-md"
-                  >
+                  <div key={index}>
                     <InstanceCard instance={instance} />
                   </div>
                 ))}
@@ -64,18 +69,19 @@ const Setup = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {connections.map((connection, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-700 p-2 rounded-lg shadow-md"
-                  >
+                  <div key={index}>
                     <ConnectionCard connection={connection} />
                   </div>
                 ))}
               </div>
             </div>
           )}
-          {showInstanceForm && <InstanceForm />}
-          {showConnectionForm && <ConnectionForm />}
+          {showConnectionForm && (
+            <ConnectionForm onClose={handleCloseConnectionForm} />
+          )}
+          {showInstanceForm && (
+            <InstanceForm onClose={handleCloseInstanceForm} />
+          )}
         </div>
       </div>
     </div>

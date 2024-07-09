@@ -1,6 +1,11 @@
 import { useState, FormEvent } from "react";
+import Icon from "./Icon";
 
-function InstanceForm() {
+interface InstanceFormProps {
+  onClose: () => void;
+}
+
+const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
   const [instanceName, setInstanceName] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -12,6 +17,9 @@ function InstanceForm() {
     <div className="flex bg-gray-700 pt-8 items-center justify-center">
       <div className="w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="space-y-4">
+          <button onClick={onClose} aria-label="Delete connection">
+            <Icon name="xcircle" className="text-white" />
+          </button>
           <div>
             <label htmlFor="instanceName" className="text-white">
               Instance Name
@@ -34,6 +42,6 @@ function InstanceForm() {
       </div>
     </div>
   );
-}
+};
 
 export default InstanceForm;

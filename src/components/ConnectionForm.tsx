@@ -5,8 +5,13 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import formFieldsConfig from "../configs/formFieldsConfig";
 import { CompanyContext } from "../context/CompanyContext";
 import { ConnectionContext } from "../context/ConnectionContext";
+import Icon from "./Icon";
 
-function ConnectionForm() {
+interface ConnectionFormProps {
+  onClose: () => void;
+}
+
+const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
   const [systems, setSystems] = useState<System[]>([]);
   const [selectedSystemId, setSelectedSystemId] = useState<
     string | undefined
@@ -108,6 +113,9 @@ function ConnectionForm() {
         onSubmit={handleSubmit}
         className="w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto"
       >
+        <button onClick={onClose} aria-label="Delete connection">
+          <Icon name="xcircle" className="text-white" />
+        </button>
         <div className="mb-4">
           <label
             className="block text-white text-sm font-bold mb-2"
@@ -163,6 +171,6 @@ function ConnectionForm() {
       )}
     </div>
   );
-}
+};
 
 export default ConnectionForm;
