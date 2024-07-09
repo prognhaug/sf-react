@@ -29,7 +29,7 @@ const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
       )
     : [];
   const handleDelete = async () => {
-    setShowPopup(true); // Show the popup when delete button is clicked
+    setShowPopup(true);
   };
 
   const confirmDelete = async () => {
@@ -43,19 +43,19 @@ const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
     } catch (error) {
       console.error("Error deleting instance:", error);
     } finally {
-      setShowPopup(false); // Hide the popup after deletion
+      setShowPopup(false);
     }
   };
 
   const cancelDelete = () => {
-    setShowPopup(false); // Hide the popup if deletion is canceled
+    setShowPopup(false);
   };
   return (
     <div className="relativ overflow-hidden p-3">
       <div className="relative">
         <button
           onClick={handleDelete}
-          aria-label="Delete connection"
+          aria-label="Delete instance"
           className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 p-2"
         >
           <Icon name="xcircle" className="text-white" />
@@ -92,7 +92,7 @@ const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
       </div>
       {showPopup && (
         <Popup
-          message="Are you sure you want to delete this connection?"
+          message="Are you sure you want to delete this instance?"
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
