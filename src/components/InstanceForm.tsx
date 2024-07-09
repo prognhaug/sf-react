@@ -2,7 +2,12 @@ import { useState, FormEvent, useContext } from "react";
 import Icon from "./Icon";
 import ReactDOM from "react-dom";
 import { Solution, System } from "../models/types";
-import formFieldsConfig from "../configs/formFieldsConfig";
+import {
+  formFieldsInstance,
+  matchingConfigFields,
+  formFieldsInstanceSettleMatch,
+  formFieldsInstanceCostOfGoods,
+} from "../configs/formFieldsConfig";
 import { ConnectionContext } from "../context/ConnectionContext";
 
 interface InstanceFormProps {
@@ -15,15 +20,28 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
     string | undefined
   >();
   const { connections } = useContext(ConnectionContext);
+  const [selectedSystemId, setSelectedSystemId] = useState<string>("");
   const isSystem = (systemID: System | unknown): systemID is System => {
     return (systemID as System).name !== undefined;
   };
 
   const renderFormFields = () => {
     if (!selectedSolutionId) return null;
-    console.log(connections);
 
-    const fields = formFieldsConfig[selectedSolutionId] || [];
+    let fields = formFieldsInstance[selectedSolutionId] || [];
+    if (selectedSolutionId === "6665ae0ee7a1177ea26e3580") {
+      const settleMatchFields =
+        formFieldsInstanceSettleMatch[selectedSystemId] || [];
+      fields = [...fields, ...settleMatchFields];
+      console.log("fields", fields);
+    } else if (selectedSolutionId === "6665adb5e7a1177ea26e3572") {
+      const costOfGoodsFields =
+        formFieldsInstanceCostOfGoods[selectedSolutionId] || [];
+      fields = [...fields, ...costOfGoodsFields];
+    }
+    if (selectedSolutionId === "6665ae0ee7a1177ea26e3580") {
+      fields = [...fields, ...matchingConfigFields];
+    }
     return fields.map((field) => {
       if (field.type === "dropdown") {
         const filteredConnections = connections?.filter((connection) => {
@@ -49,17 +67,24 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
               id={field.name}
               name={field.name}
               className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
-              defaultValue={
-                filteredConnections?.length === 1
-                  ? filteredConnections[0]._id
-                  : ""
-              }
+              defaultValue={""}
+              onChange={(e) => {
+                const selectedConnection = connections?.find(
+                  (connection) => connection._id === e.target.value
+                );
+                if (
+                  selectedConnection &&
+                  isSystem(selectedConnection.systemID)
+                ) {
+                  setSelectedSystemId(selectedConnection.systemID._id);
+                }
+              }}
             >
-              {filteredConnections?.length !== 1 && (
+              {
                 <option value="" disabled>
                   Choose connection
                 </option>
-              )}
+              }
               {filteredConnections?.map((connection) => (
                 <option key={connection._id} value={connection._id}>
                   {connection.name}

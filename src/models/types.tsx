@@ -138,8 +138,20 @@ interface FieldConfig {
   name: string;
 }
 
-interface FormFieldsConfig {
+interface FormFieldsConnection {
   [key: string]: FieldConfig[]; // This says every string key maps to an array of FieldConfig
+}
+
+interface FormFieldsSolution {
+  [key: string]: FieldConfig[];
+}
+
+interface FormFieldsInstanceSettleMatch {
+  [key: string]: FieldConfig[];
+}
+
+interface FormFieldsInstanceCostOfGoods {
+  [key: string]: FieldConfig[];
 }
 
 export type {
@@ -157,5 +169,8 @@ export type {
   Auth,
   InstanceExpanded,
   FieldConfig,
-  FormFieldsConfig,
+  FormFieldsConnection,
+  FormFieldsSolution,
+  FormFieldsInstanceSettleMatch,
+  FormFieldsInstanceCostOfGoods,
 };

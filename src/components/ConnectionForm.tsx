@@ -2,7 +2,7 @@ import { useState, FormEvent, useEffect, useContext } from "react";
 import { fetchApiData, postApiData } from "../utils/apiHandler";
 import { System, Connection } from "../models/types";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import formFieldsConfig from "../configs/formFieldsConfig";
+import { formFieldsConnection } from "../configs/formFieldsConfig";
 import { CompanyContext } from "../context/CompanyContext";
 import { ConnectionContext } from "../context/ConnectionContext";
 import Icon from "./Icon";
@@ -147,8 +147,8 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
         </div>
         <div>
           {selectedSystemId &&
-            selectedSystemId in formFieldsConfig &&
-            formFieldsConfig[selectedSystemId].map((field, index) => (
+            selectedSystemId in formFieldsConnection &&
+            formFieldsConnection[selectedSystemId].map((field, index) => (
               <div key={index} className="mb-4">
                 <label className="block text-white text-sm font-bold mb-2">
                   {field.label}
