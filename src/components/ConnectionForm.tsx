@@ -111,9 +111,13 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
     <div className="bg-gray-700 pt-8">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto"
+        className="relative w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto"
       >
-        <button onClick={onClose} aria-label="Delete connection">
+        <button
+          onClick={onClose}
+          aria-label="Close connection form"
+          className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 p-2"
+        >
           <Icon name="xcircle" className="text-white" />
         </button>
         <div className="mb-4">
@@ -141,7 +145,7 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
         </div>
         <div>
           {selectedSystemId &&
-            selectedSystemId in formFieldsConfig && // Check if selectedSystemId is a key in formFieldsConfig
+            selectedSystemId in formFieldsConfig &&
             formFieldsConfig[selectedSystemId].map((field, index) => (
               <div key={index} className="mb-4">
                 <label className="block text-white text-sm font-bold mb-2">
