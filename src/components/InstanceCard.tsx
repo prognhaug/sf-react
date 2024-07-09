@@ -70,12 +70,6 @@ const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
                 {solutionName}
               </td>
             </tr>
-            <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="px-6 py-4">Status</td>
-              <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                {instance.active ? "Active" : "Inactive"}
-              </td>
-            </tr>
             {instanceConnections?.map((connection) => (
               <tr
                 key={connection._id}

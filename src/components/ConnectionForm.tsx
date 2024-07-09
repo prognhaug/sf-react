@@ -6,6 +6,7 @@ import formFieldsConfig from "../configs/formFieldsConfig";
 import { CompanyContext } from "../context/CompanyContext";
 import { ConnectionContext } from "../context/ConnectionContext";
 import Icon from "./Icon";
+import ReactDOM from "react-dom";
 
 interface ConnectionFormProps {
   onClose: () => void;
@@ -95,6 +96,7 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
         if (response !== null) {
           console.log("Connection added successfully");
           fetchConnections();
+          onClose();
           setIsConnectionAdded(true);
           form.reset();
         } else {
@@ -107,8 +109,8 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
     postConnection();
   };
 
-  return (
-    <div className="bg-gray-700 pt-8">
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <form
         onSubmit={handleSubmit}
         className="relative w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto"
@@ -161,7 +163,14 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            type="button"
+            onClick={onClose}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mt-4"
+          >
+            Cancel
+          </button>
+          <button
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-4"
             type="submit"
           >
             Submit
@@ -173,7 +182,8 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
           Connection Added!
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 };
 
