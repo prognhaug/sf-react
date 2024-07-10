@@ -1,6 +1,6 @@
 import {
   FormFieldsConnection,
-  FormFieldsSolution,
+  FormFieldsInstanceSolution,
   FormFieldsInstanceSettleMatch,
   FormFieldsInstanceCostOfGoods,
   FieldConfig,
@@ -40,7 +40,7 @@ const formFieldsConnection: FormFieldsConnection = {
 };
 
 // SETUP INSTANCE SOLUTIONS
-const formFieldsInstance: FormFieldsSolution = {
+const formFieldsInstanceSolution: FormFieldsInstanceSolution = {
   // SettleMatch
   [settleMatch]: [
     { label: "Name", type: "text", name: "name" },
@@ -177,7 +177,7 @@ const formFieldsInstanceCostOfGoods: FormFieldsInstanceCostOfGoods = {
 
 export {
   formFieldsConnection,
-  formFieldsInstance,
+  formFieldsInstanceSolution,
   formFieldsInstanceSettleMatch,
   formFieldsInstanceCostOfGoods,
   matchingConfigFields,

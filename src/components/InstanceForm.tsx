@@ -3,7 +3,7 @@ import Icon from "./Icon";
 import ReactDOM from "react-dom";
 import { Solution, System } from "../models/types";
 import {
-  formFieldsInstance,
+  formFieldsInstanceSolution,
   matchingConfigFields,
   formFieldsInstanceSettleMatch,
   formFieldsInstanceCostOfGoods,
@@ -28,7 +28,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
   const renderFormFields = () => {
     if (!selectedSolutionId) return null;
 
-    let fields = formFieldsInstance[selectedSolutionId] || [];
+    let fields = formFieldsInstanceSolution[selectedSolutionId] || [];
     if (selectedSolutionId === "6665ae0ee7a1177ea26e3580") {
       const settleMatchFields =
         formFieldsInstanceSettleMatch[selectedSystemId] || [];
@@ -130,25 +130,25 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
       >
         <button
           onClick={onClose}
-          aria-label="Close connection form"
+          aria-label="Close instance form"
           className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 p-2"
         >
           <Icon name="xcircle" className="text-white" />
         </button>
         <label
           className="block text-white text-sm font-bold mb-2"
-          htmlFor="systemSelect"
+          htmlFor="solutionSelect"
         >
-          Select System
+          Select Solution
         </label>
         <select
-          id="systemSelect"
+          id="solutionSelect"
           className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
           value={selectedSolutionId}
           onChange={(e) => setSelectedSolutionId(e.target.value)}
         >
           <option value="" disabled selected>
-            Select System
+            Select Solution
           </option>
           {solutions.map((solution) => (
             <option key={solution._id} value={solution._id}>

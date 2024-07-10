@@ -6,7 +6,7 @@ import { CompanyContext } from "../../context/CompanyContext";
 import { useContext, useState } from "react";
 import { InstanceContext } from "../../context/InstanceContext";
 import { ConnectionContext } from "../../context/ConnectionContext";
-import InstanceForm from "../../components/InstanceForm";
+import InstanceForm from "../../components/InstanceForm/InstanceForm";
 import ConnectionForm from "../../components/ConnectionForm";
 import { Solution } from "../../models/types";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";

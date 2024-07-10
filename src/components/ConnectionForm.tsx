@@ -71,7 +71,6 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
           { fields: "systemID" },
           authHeader
         );
-        console.log(response);
         if (response === null) {
           setConnections([]);
           return;
@@ -86,7 +85,6 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
     };
     const postConnection = async () => {
       try {
-        console.log(requestBody);
         const response = await postApiData(
           `/api/connections/${company?.companyID}/add`,
 

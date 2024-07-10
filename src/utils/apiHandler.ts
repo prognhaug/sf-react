@@ -49,7 +49,6 @@ async function postApiData<T>(
   }
 
   try {
-    console.log(body);
     const response = await axios.post<ApiResponse>(url, body, {
       headers: {
         Authorization: token,

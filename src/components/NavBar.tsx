@@ -57,7 +57,6 @@ const NavBar = () => {
           { fields: "solutionID" },
           authHeader
         );
-        console.log(response);
         if (response === null) {
           setInstances([]);
           return;
@@ -79,7 +78,6 @@ const NavBar = () => {
           { fields: "systemID" },
           authHeader
         );
-        console.log(response);
         if (response === null) {
           setConnections([]);
           return;
