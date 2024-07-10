@@ -21,7 +21,7 @@ const SelectionForm: React.FC<SelectionFormProps> = ({
     string | undefined
   >();
   const { connections } = useContext(ConnectionContext);
-  const [selectedSystemId, setSelectedSystemId] = useState<string>("");
+  const [selectedSystemIds, setSelectedSystemIds] = useState<string[]>([]);
   const isSystem = (systemID: System | unknown): systemID is System => {
     return (systemID as System).name !== undefined;
   };
@@ -33,10 +33,19 @@ const SelectionForm: React.FC<SelectionFormProps> = ({
           (connection) => connection.systemID && isSystem(connection.systemID)
         )
         .map((connection) => connection._id) || [];
-
     onSelection({
       solutionId: selectedSolutionId || "",
       connections: selectedConnections,
+    });
+  };
+
+  const handleSystemSelection = (systemId: string) => {
+    setSelectedSystemIds((prevSelectedSystemIds) => {
+      if (prevSelectedSystemIds.includes(systemId)) {
+        return prevSelectedSystemIds.filter((id) => id !== systemId);
+      } else {
+        return [...prevSelectedSystemIds, systemId];
+      }
     });
   };
 
@@ -78,7 +87,7 @@ const SelectionForm: React.FC<SelectionFormProps> = ({
                   selectedConnection &&
                   isSystem(selectedConnection.systemID)
                 ) {
-                  setSelectedSystemId(selectedConnection.systemID._id);
+                  handleSystemSelection(selectedConnection.systemID._id);
                 }
               }}
             >
