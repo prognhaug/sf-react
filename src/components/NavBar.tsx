@@ -156,6 +156,14 @@ const NavBar = () => {
           >
             Dashboard
           </Link>
+          <Link
+            to="/multistep"
+            className={`px-5 py-3 ${
+              isActive("/multistep") ? "bg-gray-700" : "hover:bg-gray-700"
+            }`}
+          >
+            MultiStep
+          </Link>
         </>
       )}
       {isAuthenticated ? (
