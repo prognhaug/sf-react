@@ -74,29 +74,25 @@ const Setup = () => {
               <CompanyDetails company={company} />
             </div>
           )}
-          {instances && instances.length > 0 && (
-            <div>
-              <h2 className="text-white mb-2">
-                Instances{" "}
-                <button
-                  onClick={() =>
-                    solutions.length > 0
-                      ? handleClick(false)
-                      : handleClick(true)
-                  }
-                >
-                  +
-                </button>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {instances.map((instance, index) => (
-                  <div key={index}>
-                    <InstanceCard instance={instance} />
-                  </div>
-                ))}
-              </div>
+          <div>
+            <h2 className="text-white mb-2">
+              Instances{" "}
+              <button
+                onClick={() =>
+                  solutions.length > 0 ? handleClick(false) : handleClick(true)
+                }
+              >
+                +
+              </button>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {instances?.map((instance, index) => (
+                <div key={index}>
+                  <InstanceCard instance={instance} />
+                </div>
+              ))}
             </div>
-          )}
+          </div>
           {connections && connections.length > 0 && (
             <div>
               <h2 className="text-white mb-2">
