@@ -93,20 +93,18 @@ const Setup = () => {
               ))}
             </div>
           </div>
-          {connections && connections.length > 0 && (
-            <div>
-              <h2 className="text-white mb-2">
-                Connections <button onClick={toggleConnectionForm}>+</button>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {connections.map((connection, index) => (
-                  <div key={index}>
-                    <ConnectionCard connection={connection} />
-                  </div>
-                ))}
-              </div>
+          <div>
+            <h2 className="text-white mb-2">
+              Connections <button onClick={toggleConnectionForm}>+</button>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {connections?.map((connection, index) => (
+                <div key={index}>
+                  <ConnectionCard connection={connection} />
+                </div>
+              ))}
             </div>
-          )}
+          </div>
           {showConnectionForm && (
             <ConnectionForm onClose={handleCloseConnectionForm} />
           )}
