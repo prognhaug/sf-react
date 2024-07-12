@@ -54,7 +54,7 @@ const NavBar = () => {
       try {
         const response = await fetchApiData<Instance[] | null>(
           `/api/instances/${company.companyID}`,
-          { fields: "solutionID" },
+          { fields: "solutionID", filter: '{ "active": "true" }' },
           authHeader
         );
         if (response === null) {
