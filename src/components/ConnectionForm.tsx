@@ -2,7 +2,7 @@ import { useState, FormEvent, useEffect, useContext } from "react";
 import { fetchApiData, postApiData } from "../utils/apiHandler";
 import { System, Connection } from "../models/types";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { formFieldsConnection } from "../configs/formFieldsConfig-copy";
+import { formFieldsConnection } from "../configs/formFieldConfig";
 import { CompanyContext } from "../context/CompanyContext";
 import { ConnectionContext } from "../context/ConnectionContext";
 import Icon from "./Icon";
