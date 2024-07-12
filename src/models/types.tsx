@@ -154,6 +154,16 @@ interface FormFieldsInstanceCostOfGoods {
   [key: string]: FieldConfig[];
 }
 
+interface FormFieldsInstance {
+  [key: string]: {
+    [key: string]:
+      | {
+          [key: string]: FieldConfig[];
+        }
+      | FieldConfig[];
+  };
+}
+
 export type {
   Company,
   ApiResponse,
@@ -173,4 +183,5 @@ export type {
   FormFieldsInstanceSolution,
   FormFieldsInstanceSettleMatch,
   FormFieldsInstanceCostOfGoods,
+  FormFieldsInstance,
 };

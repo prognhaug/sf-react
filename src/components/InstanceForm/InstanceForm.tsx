@@ -1,90 +1,169 @@
-import { useState } from "react";
-import SelectionForm from "./SelectionForm";
-import SystemConfigForm from "./SystemConfigForm";
-import MatchingConfigForm from "./MatchingConfigForm";
-import { Solution } from "../../models/types";
 import ReactDOM from "react-dom";
+import React, { useState, ReactElement, useContext } from "react";
+import { SelectForm } from "./SelectForm";
+import {
+  formFieldsInstance,
+  mapInstanceData,
+} from "../../configs/formFieldConfig";
+import GenericForm from "./GenericForm";
+import { ConfigurationForm } from "./ConfigurationForm";
+import { System, Instance } from "../../models/types";
+import { postApiData, putApiData } from "../../utils/apiHandler";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { CompanyContext } from "../../context/CompanyContext";
 import Icon from "../Icon";
-
-interface FormData {
-  solutionId: string;
-  connections: string[];
-  systemConfigs: { [key: string]: object };
-  matchingConfig: object;
-}
 
 interface InstanceFormProps {
   onClose: () => void;
-  solutions: Solution[];
 }
 
-const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({
-    solutionId: "",
-    connections: [],
-    systemConfigs: {},
-    matchingConfig: {},
-  });
+type InstanceFormData = {
+  name: string;
+  selectedSolution: string;
+  selectedConnections: string[];
+  config: { [key: string]: string };
+};
 
-  const nextStep = () => setCurrentStep(currentStep + 1);
-  const prevStep = () => setCurrentStep(currentStep - 1);
+const initialState: InstanceFormData = {
+  name: "",
+  selectedSolution: "",
+  selectedConnections: [],
+  config: {},
+};
 
-  const handleSelection = (selection: {
-    solutionId: string;
-    connections: string[];
-  }) => {
-    // Initialize systemConfigs based on the selected solution
-    console.log("formData");
-    const systemConfigsInit = selection.connections.reduce<
-      Record<string, object>
-    >((acc, curr) => {
-      acc[curr] = {};
-      return acc;
-    }, {});
+const solutions = [
+  {
+    _id: "6665ae0ee7a1177ea26e3580",
+    name: "SettleMatch",
+    active: true,
+    createdAt: "2024-06-09T13:28:46.441Z",
+    updatedAt: "2024-06-09T13:28:46.441Z",
+    __v: 0,
+  },
+  {
+    _id: "668d36421740a10825396850",
+    name: "CostOfGoods",
+    active: true,
+    createdAt: "2024-07-09T13:08:18.834Z",
+    updatedAt: "2024-07-09T13:08:18.834Z",
+    __v: 0,
+  },
+  {
+    _id: "668d364a1740a10825396852",
+    name: "ReVouch",
+    active: true,
+    createdAt: "2024-07-09T13:08:26.019Z",
+    updatedAt: "2024-07-09T13:08:26.019Z",
+    __v: 0,
+  },
+];
 
-    setFormData({
-      ...formData,
-      ...selection,
-      systemConfigs: systemConfigsInit,
+const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
+  const [data, setData] = useState(initialState);
+  const [connections, setConnections] = useState<
+    { connectionId: string; system: System }[]
+  >([]);
+  const [steps, setSteps] = useState<ReactElement[]>([]);
+  const [showMoreContent, setShowMoreContent] = useState(false);
+  const { company } = useContext(CompanyContext);
+  const authHeader = useAuthHeader();
+
+  const handleConfigChange = (formData: { [key: string]: string }) => {
+    console.log("formData", formData);
+    setData((prev) => ({
+      ...prev,
+      config: {
+        ...prev.config,
+        ...formData,
+      },
+    }));
+  };
+
+  function updateFields(fields: Partial<InstanceFormData>) {
+    setData((prev) => ({ ...prev, ...fields }));
+  }
+
+  const onSolutionChange = (solutionId: string) => {
+    setData((prev) => ({ ...prev, selectedSolution: solutionId }));
+  };
+
+  const onConnectionChange = (connectionId: string, system: System) => {
+    setConnections((prev) => [
+      ...prev,
+      { connectionId: connectionId, system: system },
+    ]);
+    setData((prev) => ({
+      ...prev,
+      selectedConnections: [...prev.selectedConnections, connectionId],
+    }));
+  };
+
+  const getFormFieldsConfig = () => {
+    const selectedSolutionConfig = formFieldsInstance[data.selectedSolution];
+
+    if (!selectedSolutionConfig) return;
+
+    Object.keys(selectedSolutionConfig).forEach((configType) => {
+      const configOrFields = selectedSolutionConfig[configType];
+
+      if (Array.isArray(configOrFields)) {
+        console.log("configType", configType, "configOrFields", configOrFields);
+        setSteps((prev) => [
+          ...prev,
+          <GenericForm
+            formId={configType}
+            fieldsConfig={configOrFields}
+            handleConfigChange={handleConfigChange}
+          />,
+        ]);
+      } else {
+        connections.forEach((connection) => {
+          const fields = configOrFields[connection.system._id];
+          if (fields) {
+            setSteps((prev) => [
+              ...prev,
+              <GenericForm
+                formId={connection.system.type}
+                fieldsConfig={fields}
+                handleConfigChange={handleConfigChange}
+              />,
+            ]);
+          }
+        });
+      }
     });
-    nextStep();
   };
 
-  const handleSystemConfig = (key: string, config: object) => {
-    const updatedSystemConfigs = { ...formData.systemConfigs, [key]: config };
-    setFormData({ ...formData, systemConfigs: updatedSystemConfigs });
-    nextStep();
-  };
+  function generateSteps(e: React.FormEvent) {
+    e.preventDefault();
+    getFormFieldsConfig();
+    setShowMoreContent(true);
+  }
 
-  const handleMatchingConfig = (config: object) => {
-    setFormData({ ...formData, matchingConfig: config });
-  };
-
-  const renderSystemConfigForms = () => {
-    return Object.keys(formData.systemConfigs).map((key) => (
-      <SystemConfigForm
-        key={key}
-        onConfigComplete={(config: object) => handleSystemConfig(key, config)}
-      />
-    ));
-  };
-
-  const renderStep = () => {
-    if (currentStep === 1) {
-      return (
-        <SelectionForm
-          onSelection={handleSelection}
-          solutions={solutions}
-          onClose={onClose}
-        />
+  async function save() {
+    console.log(data);
+    const dataToSend = mapInstanceData(data);
+    try {
+      const response: Instance | null = await postApiData(
+        `/api/instances/${company?.companyID}/add`,
+        { name: dataToSend.name, solutionID: dataToSend.solutionID },
+        authHeader
       );
-    } else if (currentStep <= Object.keys(formData.systemConfigs).length + 1) {
-      return renderSystemConfigForms()[currentStep - 2];
-    } else {
-      return <MatchingConfigForm onConfigComplete={handleMatchingConfig} />;
+      await putApiData(
+        `/api/instances/${company?.companyID}/${response?._id}/connections/add`,
+        { connections: dataToSend.connections },
+        authHeader
+      );
+      await postApiData(
+        `/api/instances/${company?.companyID}/${response?._id}/config/add`,
+        { ...dataToSend.config },
+        authHeader
+      );
+      onClose();
+    } catch (error) {
+      console.error("Error saving instance:", error);
     }
-  };
+  }
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -96,29 +175,33 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
         >
           <Icon name="xcircle" className="text-white" />
         </button>
-        {renderStep()}
-        <div
-          className={`flex ${
-            currentStep > 1 ? "justify-between" : "justify-end"
-          } mt-4`}
-        >
-          {currentStep > 1 && (
-            <button
-              onClick={prevStep}
-              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            >
-              Previous
-            </button>
-          )}
-          {currentStep < Object.keys(formData.systemConfigs).length + 2 && (
-            <button
-              onClick={nextStep}
-              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            >
-              Next
-            </button>
-          )}
-        </div>
+        {showMoreContent ? (
+          <ConfigurationForm
+            forms={steps.map((form) =>
+              React.cloneElement(form, { handleConfigChange })
+            )}
+            save={save}
+          />
+        ) : (
+          <form>
+            <SelectForm
+              key="selectForm"
+              updateFields={updateFields}
+              onSolutionChange={onSolutionChange}
+              onConnectionChange={onConnectionChange}
+              solutions={solutions}
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="submit"
+                onClick={generateSteps}
+                className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>,
     document.body
@@ -126,3 +209,4 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose, solutions }) => {
 };
 
 export default InstanceForm;
+export type { InstanceFormData };

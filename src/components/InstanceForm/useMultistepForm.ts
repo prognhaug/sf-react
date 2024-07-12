@@ -1,10 +1,12 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useState, useEffect } from "react";
 
 export function useMultistepForm(steps: ReactElement[]) {
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
 
-  function next() {
+  function next(event?: React.MouseEvent) {
+    event?.stopPropagation();
     setCurrentStepIndex((i: number) => {
+      console.log("i: ", i, "steps.length: ", steps.length - 1);
       if (i >= steps.length - 1) return i;
       return i + 1;
     });
@@ -20,6 +22,8 @@ export function useMultistepForm(steps: ReactElement[]) {
   function goTo(index: number) {
     setCurrentStepIndex(index);
   }
+
+  useEffect(() => {}, [steps]);
 
   return {
     currentStepIndex,

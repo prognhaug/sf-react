@@ -13,7 +13,6 @@ import { CompanyContext } from "./context/CompanyContext";
 import { InstanceContext } from "./context/InstanceContext";
 import { Connection } from "./models/types";
 import { ConnectionContext } from "./context/ConnectionContext";
-import Multistep from "./pages/TestMultiStep/MultiStep";
 interface IUserData {
   name: string;
   uuid: string;
@@ -40,7 +39,6 @@ export default function App() {
           <ConnectionContext.Provider value={{ connections, setConnections }}>
             <Router>
               <Routes>
-                <Route path="/multistep" element={<Multistep />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route element={<AuthOutlet fallbackPath="/login" />}>
                   <Route path="/" element={<Home />} />

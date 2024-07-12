@@ -43,7 +43,7 @@ async function postApiData<T>(
   url: string,
   body: object,
   token: string | null
-): Promise<boolean | null> {
+): Promise<T | null> {
   if (!token) {
     return null;
   }
@@ -56,10 +56,10 @@ async function postApiData<T>(
     });
 
     if (isSuccessApiResponse<T>(response.data)) {
-      return true;
+      return response.data.result.data;
     } else {
       console.error("Failed to post data");
-      return false;
+      return null;
     }
   } catch (error) {
     console.error(
@@ -70,4 +70,35 @@ async function postApiData<T>(
   }
 }
 
-export { fetchApiData, postApiData };
+async function putApiData<T>(
+  url: string,
+  body: object,
+  token: string | null
+): Promise<T | null> {
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const response = await axios.put<ApiResponse>(url, body, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (isSuccessApiResponse<T>(response.data)) {
+      return response.data.result.data;
+    } else {
+      console.error("Failed to put data");
+      return null;
+    }
+  } catch (error) {
+    console.error(
+      "There was an error uploading the data or no data retrieved",
+      error
+    );
+    return null;
+  }
+}
+
+export { fetchApiData, postApiData, putApiData };

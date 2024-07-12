@@ -7,7 +7,7 @@ import {
   matchingConfigFields,
   formFieldsInstanceSettleMatch,
   formFieldsInstanceCostOfGoods,
-} from "../configs/formFieldsConfig";
+} from "../configs/formFieldsConfig-copy";
 import { ConnectionContext } from "../context/ConnectionContext";
 
 interface InstanceFormProps {

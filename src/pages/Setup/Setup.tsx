@@ -115,11 +115,14 @@ const Setup = () => {
             <ConnectionForm onClose={handleCloseConnectionForm} />
           )}
           {showInstanceForm && (
+            <InstanceForm onClose={handleCloseInstanceForm} />
+          )}
+          {/* {showInstanceForm && (
             <InstanceForm
               onClose={handleCloseInstanceForm}
               solutions={solutions}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>
