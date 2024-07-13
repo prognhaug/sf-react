@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -22,6 +22,29 @@ const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Assert event.target as Node
+      const target = event.target as Node | null;
+      if (
+        dropdownRef.current &&
+        target &&
+        !dropdownRef.current.contains(target)
+      ) {
+        setIsDropdownOpen(false); // Close the dropdown
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -109,7 +132,7 @@ const NavBar = () => {
     <nav className="w-64 h-screen bg-gray-800 text-white flex flex-col">
       {isAuthenticated && (
         <>
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
               className="px-5 py-3 w-full text-left hover:bg-gray-700"
@@ -117,9 +140,9 @@ const NavBar = () => {
               {selectedCompany?.name || "Choose Company"}
             </button>
             {isDropdownOpen && (
-              <div className="absolute left-0 bg-gray-800 w-full">
+              <div className="absolute left-0 bg-gray-700 w-full">
                 {companies.map((company) => (
-                  <div
+                  <button
                     key={company._id}
                     className="px-5 py-3 hover:bg-gray-700 block"
                     onClick={() => {
@@ -128,7 +151,7 @@ const NavBar = () => {
                     }}
                   >
                     {company.name}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

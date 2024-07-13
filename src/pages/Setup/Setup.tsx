@@ -60,60 +60,56 @@ const Setup = () => {
     }
   };
   return (
-    <div className="flex min-h-screen bg-gray-700">
-      <div className="flex-1 flex flex-col items-center">
-        <h1 className="text-white mt-4 mb-2">Setup Page</h1>
-        <div className="w-full p-4">
-          {company && (
-            <div>
-              <h2 className="text-white mb-2">Company Details</h2>
-              <CompanyDetails company={company} />
-            </div>
-          )}
+    <div className="flex-1 flex flex-col items-center">
+      <h1 className="text-white mt-4 mb-2">Setup Page</h1>
+      <div className="w-full p-4">
+        {company && (
           <div>
-            <h2 className="text-white mb-2">
-              Instances{" "}
-              <button
-                onClick={() =>
-                  solutions.length > 0 ? handleClick(false) : handleClick(true)
-                }
-              >
-                +
-              </button>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {instances?.map((instance, index) => (
-                <div key={index}>
-                  <InstanceCard instance={instance} />
-                </div>
-              ))}
-            </div>
+            <h2 className="text-white mb-2">Company Details</h2>
+            <CompanyDetails company={company} />
           </div>
-          <div>
-            <h2 className="text-white mb-2">
-              Connections <button onClick={toggleConnectionForm}>+</button>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {connections?.map((connection, index) => (
-                <div key={index}>
-                  <ConnectionCard connection={connection} />
-                </div>
-              ))}
-            </div>
+        )}
+        <div>
+          <h2 className="text-white mb-2">
+            Instances{" "}
+            <button
+              onClick={() =>
+                solutions.length > 0 ? handleClick(false) : handleClick(true)
+              }
+            >
+              +
+            </button>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {instances?.map((instance, index) => (
+              <div key={index}>
+                <InstanceCard instance={instance} />
+              </div>
+            ))}
           </div>
-          {showConnectionForm && (
-            <ConnectionForm onClose={handleCloseConnectionForm} />
-          )}
-          {showInstanceForm && (
-            <InstanceForm onClose={handleCloseInstanceForm} />
-          )}
-          {/* {showInstanceForm && (
+        </div>
+        <div>
+          <h2 className="text-white mb-2">
+            Connections <button onClick={toggleConnectionForm}>+</button>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {connections?.map((connection, index) => (
+              <div key={index}>
+                <ConnectionCard connection={connection} />
+              </div>
+            ))}
+          </div>
+        </div>
+        {showConnectionForm && (
+          <ConnectionForm onClose={handleCloseConnectionForm} />
+        )}
+        {showInstanceForm && <InstanceForm onClose={handleCloseInstanceForm} />}
+        {/* {showInstanceForm && (
             <InstanceForm
               onClose={handleCloseInstanceForm}
               solutions={solutions}
             />
           )} */}
-        </div>
       </div>
     </div>
   );
