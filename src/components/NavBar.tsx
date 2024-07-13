@@ -7,11 +7,13 @@ import { Company, Instance, Connection } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
 import { InstanceContext } from "../context/InstanceContext";
 import { ConnectionContext } from "../context/ConnectionContext";
+import { CompaniesContext } from "../context/CompaniesContext";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const { setCompanies: setCompaniesContext } = useContext(CompaniesContext);
   const { setInstances } = useContext(InstanceContext);
   const { setCompany } = useContext(CompanyContext);
   const { setConnections } = useContext(ConnectionContext);
@@ -67,56 +69,64 @@ const NavBar = () => {
     fetchCompanies();
   }, [isAuthenticated, authHeader]);
 
+  async function fetchInstances(
+    companyID: number,
+    authHeader: string | null
+  ): Promise<Instance[] | null> {
+    try {
+      const response = await fetchApiData<Instance[] | null>(
+        `/api/instances/${companyID}`,
+        { fields: "solutionID", filter: '{ "active": "true" }' },
+        authHeader
+      );
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch instances:", error);
+      return null;
+    }
+  }
+
+  // Function to fetch connections for a given company
+  async function fetchConnections(
+    companyID: number,
+    authHeader: string | null
+  ): Promise<Connection[] | null> {
+    try {
+      const response = await fetchApiData<Connection[] | null>(
+        `/api/connections/${companyID}`,
+        { fields: "systemID" },
+        authHeader
+      );
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch connections:", error);
+      return null;
+    }
+  }
   useEffect(() => {
     if (!isAuthenticated || !selectedCompany) return;
-    const fetchInstances = async () => {
-      const company = selectedCompany;
-      if (!company) return;
-      try {
-        const response = await fetchApiData<Instance[] | null>(
-          `/api/instances/${company.companyID}`,
-          { fields: "solutionID", filter: '{ "active": "true" }' },
-          authHeader
-        );
-        if (response === null) {
-          setInstances([]);
-          return;
-        } else if (response !== null) {
-          setInstances(response);
-        } else {
-          console.error("Failed to fetch instances or unauthorized");
-        }
-      } catch (error) {
-        console.error("Failed to fetch instances:", error);
-      }
+
+    // Reset state to initial state before fetching new data
+    setInstances([]);
+    setConnections([]);
+
+    const companyID = selectedCompany.companyID;
+
+    const fetchData = async () => {
+      const [instancesResult, connectionsResult] = await Promise.all([
+        fetchInstances(companyID, authHeader),
+        fetchConnections(companyID, authHeader),
+      ]);
+
+      // Update context with new data
+      setInstances(instancesResult ?? []);
+      setConnections(connectionsResult ?? []);
     };
-    const fetchConnections = async () => {
-      const company = selectedCompany;
-      if (!company) return;
-      try {
-        const response = await fetchApiData<Connection[] | null>(
-          `/api/connections/${company.companyID}`,
-          { fields: "systemID" },
-          authHeader
-        );
-        if (response === null) {
-          setConnections([]);
-          return;
-        } else if (response !== null) {
-          setConnections(response);
-        } else {
-          console.error("Failed to fetch connections or unauthorized");
-        }
-      } catch (error) {
-        console.error("Failed to fetch connections:", error);
-      }
-    };
-    fetchConnections();
-    fetchInstances();
+
+    fetchData();
   }, [
     isAuthenticated,
     selectedCompany,
-    companies,
     authHeader,
     setInstances,
     setConnections,
@@ -127,6 +137,8 @@ const NavBar = () => {
   const handleSelectCompany = (company: Company) => {
     setSelectedCompany(company);
     setCompany(company);
+
+    toggleDropdown();
   };
   return (
     <nav className="w-64 h-screen bg-gray-800 text-white flex flex-col">
@@ -149,7 +161,6 @@ const NavBar = () => {
                       className="px-5 py-3 hover:bg-gray-700 block border w-full"
                       onClick={() => {
                         handleSelectCompany(company);
-                        toggleDropdown();
                       }}
                     >
                       {company.name}
@@ -168,6 +179,7 @@ const NavBar = () => {
           </Link>
           <Link
             to="/dashboard"
+            onClick={() => setCompaniesContext(companies)}
             className={`px-5 py-3 ${
               isActive("/dashboard") ? "bg-gray-700" : "hover:bg-gray-700"
             }`}

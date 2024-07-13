@@ -1,14 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import TaskRow from "./TaskRow";
 import { Task, ExtendedTask, Company } from "../../models/types";
-// import { useApiHandler } from "../../utils/useApiHandler";
 import { fetchApiData } from "../../utils/apiHandler-copy";
 import { CompaniesContext } from "../../context/CompaniesContext";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import TaskHeader from "./TaskHeader";
 
 const TaskTable = () => {
-  // const { get } = useApiHandler();
   const authHeader = useAuthHeader();
   const [tasks, setTasks] = useState<Task[]>([]);
   const { companies } = useContext(CompaniesContext);

@@ -35,11 +35,17 @@ async function fetchApiData<T>(
       throw new Error("API response was not successful.");
     }
   } catch (error) {
-    console.error(
-      "There was an error fetching the data or no data retrieved",
-      error
-    );
-    throw new Error("Failed to fetch data");
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      // Handle 404 specifically
+      console.log("Resource not found", error);
+      return [] as T;
+    } else {
+      console.error(
+        "There was an error fetching the data or no data retrieved",
+        error
+      );
+      throw new Error("Failed to fetch data");
+    }
   }
 }
 
