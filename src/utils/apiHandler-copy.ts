@@ -1,45 +1,41 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { ApiResponse, SuccessApiResponse } from "../models/types";
 
 function isSuccessApiResponse<T>(
   response: ApiResponse
 ): response is SuccessApiResponse<T> {
-  return (
-    "result" in response &&
-    response.result !== null &&
-    "data" in response.result
-  );
+  return "result" in response;
 }
 
 async function fetchApiData<T>(
   url: string,
   params: object,
   token: string | null // Add token parameter
-): Promise<T> {
+): Promise<T | null> {
+  if (!token) {
+    return null;
+  }
+
   try {
-    const response: AxiosResponse<ApiResponse> = await axios.get<ApiResponse>(
-      url,
-      {
-        headers: {
-          Authorization: token,
-        },
-        params,
-      }
-    );
+    const response = await axios.get<ApiResponse>(url, {
+      headers: {
+        Authorization: token,
+      },
+      params,
+    });
 
     if (isSuccessApiResponse<T>(response.data)) {
-      // Now that we've asserted the type, we can safely access .data
       return response.data.result.data;
     } else {
-      // Handle failure or error responses as needed
-      throw new Error("API response was not successful.");
+      console.error("Failed to fetch data");
+      return null;
     }
   } catch (error) {
     console.error(
       "There was an error fetching the data or no data retrieved",
       error
     );
-    throw new Error("Failed to fetch data");
+    return null;
   }
 }
 

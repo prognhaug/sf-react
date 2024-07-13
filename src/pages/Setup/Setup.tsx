@@ -1,4 +1,3 @@
-import NavBar from "../../components/NavBar";
 import CompanyDetails from "../../components/CompanyDetails";
 import InstanceCard from "../../components/InstanceCard";
 import ConnectionCard from "../../components/ConnectionCard";
@@ -10,7 +9,7 @@ import InstanceForm from "../../components/InstanceForm/InstanceForm";
 import ConnectionForm from "../../components/ConnectionForm";
 import { Solution } from "../../models/types";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { fetchApiData } from "../../utils/apiHandler";
+import { fetchApiData } from "../../utils/apiHandler-copy";
 
 const Setup = () => {
   const [showInstanceForm, setShowInstanceForm] = useState(false);
@@ -62,9 +61,6 @@ const Setup = () => {
   };
   return (
     <div className="flex min-h-screen bg-gray-700">
-      <div className="w-64">
-        <NavBar />
-      </div>
       <div className="flex-1 flex flex-col items-center">
         <h1 className="text-white mt-4 mb-2">Setup Page</h1>
         <div className="w-full p-4">

@@ -1,18 +1,25 @@
 import { useEffect, useState, useContext } from "react";
 import TaskRow from "./TaskRow";
 import { Task, ExtendedTask, Company } from "../../models/types";
-import { useApiHandler } from "../../utils/useApiHandler";
+// import { useApiHandler } from "../../utils/useApiHandler";
+import { fetchApiData } from "../../utils/apiHandler-copy";
 import { CompaniesContext } from "../../context/CompaniesContext";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const TaskTable = () => {
-  const { get } = useApiHandler();
+  // const { get } = useApiHandler();
+  const authHeader = useAuthHeader();
   const [tasks, setTasks] = useState<Task[]>([]);
   const { companies } = useContext(CompaniesContext);
 
   useEffect(() => {
     async function fetchTasks(): Promise<void> {
       try {
-        const fetchedTasks = await get<Task[]>("/api/tasks/");
+        const fetchedTasks = await fetchApiData<Task[]>(
+          "/api/tasks/",
+          {},
+          authHeader
+        );
         if (fetchedTasks) {
           setTasks(fetchedTasks);
         }
@@ -21,7 +28,7 @@ const TaskTable = () => {
       }
     }
     fetchTasks();
-  }, [get]);
+  }, [authHeader]);
 
   const mergeTasksWithCompanies = (tasks: Task[], companies: Company[]) => {
     return tasks.map((task) => {

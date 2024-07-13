@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { fetchApiData } from "../utils/apiHandler";
+import { fetchApiData } from "../utils/apiHandler-copy";
 import { Company, Instance, Connection } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
 import { InstanceContext } from "../context/InstanceContext";
@@ -13,9 +13,10 @@ const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const { setInstances } = useContext(InstanceContext);
-  const { setCompany } = useContext(CompanyContext);
+  const { company, setCompany } = useContext(CompanyContext);
   const { setConnections } = useContext(ConnectionContext);
-  const [selectedCompany, setSelectedCompany] = useState<Company>();
+  const [selectedCompanyName, setSelectedCompanyName] =
+    useState("Choose Company");
   const isAuthenticated = useIsAuthenticated();
   const authHeader = useAuthHeader();
   const signOut = useSignOut();
@@ -44,10 +45,11 @@ const NavBar = () => {
     fetchCompanies();
   }, [isAuthenticated, authHeader]);
 
+  // Fetch instances only when selectedCompanyName changes and meets conditions
   useEffect(() => {
-    if (!isAuthenticated || !selectedCompany) return;
+    if (!isAuthenticated || selectedCompanyName === "Choose Company") return;
     const fetchInstances = async () => {
-      const company = selectedCompany;
+      const company = companies.find((c) => c.name === selectedCompanyName);
       if (!company) return;
       try {
         const response = await fetchApiData<Instance[] | null>(
@@ -68,7 +70,7 @@ const NavBar = () => {
       }
     };
     const fetchConnections = async () => {
-      const company = selectedCompany;
+      const company = companies.find((c) => c.name === selectedCompanyName);
       if (!company) return;
       try {
         const response = await fetchApiData<Connection[] | null>(
@@ -92,19 +94,20 @@ const NavBar = () => {
     fetchInstances();
   }, [
     isAuthenticated,
-    selectedCompany,
+    selectedCompanyName,
     companies,
     authHeader,
     setInstances,
     setConnections,
   ]);
 
+  // Optionally, handle selectedCompanyName update based on company changes
+  useEffect(() => {
+    setSelectedCompanyName(company?.name || "Choose Company");
+  }, [company]);
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  const handleSelectCompany = (company: Company) => {
-    setSelectedCompany(company);
-    setCompany(company);
-  };
   return (
     <nav className="w-64 h-screen bg-gray-800 text-white flex flex-col">
       {isAuthenticated && (
@@ -114,22 +117,26 @@ const NavBar = () => {
               onClick={toggleDropdown}
               className="px-5 py-3 w-full text-left hover:bg-gray-700"
             >
-              {selectedCompany?.name || "Choose Company"}
+              {selectedCompanyName}{" "}
+              {/* Display the selected company's name or "Choose Company" */}
             </button>
             {isDropdownOpen && (
-              <div className="absolute left-0 bg-gray-800 w-full">
-                {companies.map((company) => (
-                  <div
-                    key={company._id}
-                    className="px-5 py-3 hover:bg-gray-700 block"
-                    onClick={() => {
-                      handleSelectCompany(company);
-                      toggleDropdown();
-                    }}
-                  >
-                    {company.name}
-                  </div>
-                ))}
+              <div>
+                <button className="absolute left-0 bg-gray-800 w-full">
+                  {companies.map((company) => (
+                    <div
+                      key={company._id}
+                      className="px-5 py-3 hover:bg-gray-700 block"
+                      onClick={() => {
+                        setCompany(company);
+                        setSelectedCompanyName(company.name);
+                        toggleDropdown();
+                      }}
+                    >
+                      {company.name}
+                    </div>
+                  ))}
+                </button>
               </div>
             )}
           </div>
@@ -174,4 +181,5 @@ const NavBar = () => {
     </nav>
   );
 };
+
 export default NavBar;

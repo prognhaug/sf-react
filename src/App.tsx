@@ -14,6 +14,7 @@ import { InstanceContext } from "./context/InstanceContext";
 import { Connection } from "./models/types";
 import { ConnectionContext } from "./context/ConnectionContext";
 import { CompaniesContext } from "./context/CompaniesContext";
+import NavBar from "./components/NavBar";
 interface IUserData {
   name: string;
   uuid: string;
@@ -41,14 +42,19 @@ export default function App() {
           <InstanceContext.Provider value={{ instances, setInstances }}>
             <ConnectionContext.Provider value={{ connections, setConnections }}>
               <Router>
-                <Routes>
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route element={<AuthOutlet fallbackPath="/login" />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/setup" element={<Setup />} />
-                  </Route>
-                </Routes>
+                <div className=" flex min-h-screen bg-gray-700">
+                  <div className="w-64">
+                    <NavBar />
+                  </div>
+                  <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route element={<AuthOutlet fallbackPath="/login" />}>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/setup" element={<Setup />} />
+                    </Route>
+                  </Routes>
+                </div>
               </Router>
             </ConnectionContext.Provider>
           </InstanceContext.Provider>

@@ -8,7 +8,7 @@ import {
 import GenericForm from "./GenericForm";
 import { ConfigurationForm } from "./ConfigurationForm";
 import { System, Instance } from "../../models/types";
-import { postApiData, putApiData } from "../../utils/apiHandler";
+import { postApiData, putApiData } from "../../utils/apiHandler-copy";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { CompanyContext } from "../../context/CompanyContext";
 import Icon from "../Icon";

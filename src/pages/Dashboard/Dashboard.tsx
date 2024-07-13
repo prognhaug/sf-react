@@ -1,11 +1,9 @@
 import React from "react";
-import NavBar from "../../components/NavBar";
 import TaskTable from "../../components/Tasks/TaskTable";
 
 const Dashboard: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-gray-700">
-      <NavBar />
       <div className="flex flex-col flex-1">
         <div className="flex items-center justify-center bg-gray-800 py-4">
           <h1 className="text-white">Dashboard</h1>
