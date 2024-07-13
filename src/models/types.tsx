@@ -103,12 +103,12 @@ interface Task {
   name: string;
   data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
   active: boolean;
-  lastRunDate?: Date | null;
-  nextRunDate: Date;
+  lastRunDate?: string | null;
+  nextRunDate: string;
   lastRunSuccess?: boolean | null;
   interval: number;
-  createdAt?: Date; // Automatically added by mongoose timestamps
-  updatedAt?: Date; // Automatically added by mongoose timestamps
+  createdAt?: string; // Automatically added by mongoose timestamps
+  updatedAt?: string; // Automatically added by mongoose timestamps
 }
 
 interface ExtendedTask extends Task {

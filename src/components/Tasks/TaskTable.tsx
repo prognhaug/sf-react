@@ -5,6 +5,7 @@ import { Task, ExtendedTask, Company } from "../../models/types";
 import { fetchApiData } from "../../utils/apiHandler-copy";
 import { CompaniesContext } from "../../context/CompaniesContext";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import TaskHeader from "./TaskHeader";
 
 const TaskTable = () => {
   // const { get } = useApiHandler();
@@ -45,29 +46,24 @@ const TaskTable = () => {
   );
 
   return (
-    <div className="relative overflow-hidden p-3">
-      <div className="overflow-x-auto sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800">
-            <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-white">
-              <th scope="col" className="px-6 py-4">
-                Company Name
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Instance Name
-              </th>
-              <th scope="col" className="px-6 py-4">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-gray-800">
-            {extendedTasks.map((extendedTask, index) => (
-              <TaskRow key={index} task={extendedTask} />
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="relative overflow-x-auto p-3 sm:rounded-lg">
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800">
+          <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-white">
+            <TaskHeader>Company Name</TaskHeader>
+            <TaskHeader>Instance Name</TaskHeader>
+            <TaskHeader>Last Run Date</TaskHeader>
+            <TaskHeader>Last Run Status</TaskHeader>
+            <TaskHeader>Next Run Date</TaskHeader>
+            <TaskHeader>Status</TaskHeader>
+          </tr>
+        </thead>
+        <tbody className="bg-white dark:bg-gray-800">
+          {extendedTasks.map((extendedTask, index) => (
+            <TaskRow key={index} task={extendedTask} />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
