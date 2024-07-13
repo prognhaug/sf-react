@@ -7,11 +7,13 @@ import { Company, Instance, Connection } from "../models/types";
 import { CompanyContext } from "../context/CompanyContext";
 import { InstanceContext } from "../context/InstanceContext";
 import { ConnectionContext } from "../context/ConnectionContext";
+import { CompaniesContext } from "../context/CompaniesContext";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const { companies, setCompanies } = useContext(CompaniesContext);
+  // const [companies, setCompanies] = useState<Company[]>([]);
   const { setInstances } = useContext(InstanceContext);
   const { company, setCompany } = useContext(CompanyContext);
   const { setConnections } = useContext(ConnectionContext);
@@ -43,13 +45,13 @@ const NavBar = () => {
       }
     };
     fetchCompanies();
-  }, [isAuthenticated, authHeader]);
+  }, [isAuthenticated, authHeader, setCompanies]);
 
   // Fetch instances only when selectedCompanyName changes and meets conditions
   useEffect(() => {
     if (!isAuthenticated || selectedCompanyName === "Choose Company") return;
     const fetchInstances = async () => {
-      const company = companies.find((c) => c.name === selectedCompanyName);
+      const company = companies?.find((c) => c.name === selectedCompanyName);
       if (!company) return;
       try {
         const response = await fetchApiData<Instance[] | null>(
@@ -70,7 +72,7 @@ const NavBar = () => {
       }
     };
     const fetchConnections = async () => {
-      const company = companies.find((c) => c.name === selectedCompanyName);
+      const company = companies?.find((c) => c.name === selectedCompanyName);
       if (!company) return;
       try {
         const response = await fetchApiData<Connection[] | null>(
@@ -123,7 +125,7 @@ const NavBar = () => {
             {isDropdownOpen && (
               <div>
                 <button className="absolute left-0 bg-gray-800 w-full">
-                  {companies.map((company) => (
+                  {companies?.map((company) => (
                     <div
                       key={company._id}
                       className="px-5 py-3 hover:bg-gray-700 block"

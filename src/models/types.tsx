@@ -94,6 +94,27 @@ interface Event {
   };
 }
 
+interface DataType {
+  instanceID: string; // Assuming instanceID is a string representation of ObjectId
+  companyID: number;
+  debugMode: boolean;
+}
+interface Task {
+  name: string;
+  data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
+  active: boolean;
+  lastRunDate?: Date | null;
+  nextRunDate: Date;
+  lastRunSuccess?: boolean | null;
+  interval: number;
+  createdAt?: Date; // Automatically added by mongoose timestamps
+  updatedAt?: Date; // Automatically added by mongoose timestamps
+}
+
+interface ExtendedTask extends Task {
+  companyInfo: Company | undefined;
+}
+
 // Base response interface
 interface BaseResponse {
   status: string;
@@ -184,4 +205,6 @@ export type {
   FormFieldsInstanceSettleMatch,
   FormFieldsInstanceCostOfGoods,
   FormFieldsInstance,
+  Task,
+  ExtendedTask,
 };

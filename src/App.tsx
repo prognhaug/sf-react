@@ -13,6 +13,7 @@ import { CompanyContext } from "./context/CompanyContext";
 import { InstanceContext } from "./context/InstanceContext";
 import { Connection } from "./models/types";
 import { ConnectionContext } from "./context/ConnectionContext";
+import { CompaniesContext } from "./context/CompaniesContext";
 interface IUserData {
   name: string;
   uuid: string;
@@ -31,25 +32,28 @@ export default function App() {
   const [connections, setConnections] = useState<Connection[] | undefined>(
     undefined
   );
+  const [companies, setCompanies] = useState<Company[] | undefined>(undefined);
 
   return (
     <AuthProvider store={store}>
-      <CompanyContext.Provider value={{ company, setCompany }}>
-        <InstanceContext.Provider value={{ instances, setInstances }}>
-          <ConnectionContext.Provider value={{ connections, setConnections }}>
-            <Router>
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route element={<AuthOutlet fallbackPath="/login" />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/setup" element={<Setup />} />
-                </Route>
-              </Routes>
-            </Router>
-          </ConnectionContext.Provider>
-        </InstanceContext.Provider>
-      </CompanyContext.Provider>
+      <CompaniesContext.Provider value={{ companies, setCompanies }}>
+        <CompanyContext.Provider value={{ company, setCompany }}>
+          <InstanceContext.Provider value={{ instances, setInstances }}>
+            <ConnectionContext.Provider value={{ connections, setConnections }}>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route element={<AuthOutlet fallbackPath="/login" />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/setup" element={<Setup />} />
+                  </Route>
+                </Routes>
+              </Router>
+            </ConnectionContext.Provider>
+          </InstanceContext.Provider>
+        </CompanyContext.Provider>
+      </CompaniesContext.Provider>
     </AuthProvider>
   );
 }
