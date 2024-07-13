@@ -137,24 +137,24 @@ const NavBar = () => {
               onClick={toggleDropdown}
               className="px-5 py-3 w-full text-left hover:bg-gray-700"
             >
-              {isDropdownOpen
-                ? "Choose Company"
-                : selectedCompany?.name || "Choose Company"}
+              {selectedCompany?.name || "Choose Company"}
             </button>
             {isDropdownOpen && (
-              <div className="absolute left-0 bg-gray-700 w-full">
-                {companies.map((company) => (
-                  <button
-                    key={company._id}
-                    className="px-5 py-3 hover:bg-gray-700 block"
-                    onClick={() => {
-                      handleSelectCompany(company);
-                      toggleDropdown();
-                    }}
-                  >
-                    {company.name}
-                  </button>
-                ))}
+              <div className="absolute left-full top-0 bg-gray-800 w-64 z-50">
+                {companies
+                  .filter((company) => company._id !== selectedCompany?._id)
+                  .map((company) => (
+                    <button
+                      key={company._id}
+                      className="px-5 py-3 hover:bg-gray-700 block border w-full"
+                      onClick={() => {
+                        handleSelectCompany(company);
+                        toggleDropdown();
+                      }}
+                    >
+                      {company.name}
+                    </button>
+                  ))}
               </div>
             )}
           </div>
