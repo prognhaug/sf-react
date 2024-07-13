@@ -137,7 +137,9 @@ const NavBar = () => {
               onClick={toggleDropdown}
               className="px-5 py-3 w-full text-left hover:bg-gray-700"
             >
-              {selectedCompany?.name || "Choose Company"}
+              {isDropdownOpen
+                ? "Choose Company"
+                : selectedCompany?.name || "Choose Company"}
             </button>
             {isDropdownOpen && (
               <div className="absolute left-0 bg-gray-700 w-full">
