@@ -76,13 +76,15 @@ export function SelectForm({
         Solution
       </label>
       <select
+        value={selectedSolution}
         id="solution"
         name="solution"
         onChange={(e) => handleSolutionFieldChange(e.target.value)}
         required
         className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
+        // defaultValue=""
       >
-        <option value="" disabled selected>
+        <option value="" disabled>
           Select Solution
         </option>
         {solutions.map((solution) => (
@@ -106,6 +108,7 @@ export function SelectForm({
               onChange={handleConnectionChange}
               required
               className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
+              defaultValue=""
             >
               <option value="">Select an Option</option>
               {getFilteredConnections(field.name).map((connection, idx) => (
