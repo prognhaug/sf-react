@@ -33,13 +33,11 @@ const TaskActionCell = ({ isActive, task }: TaskActionCellProps) => {
         <Icon name="trashCan"></Icon>
       </button>
       <button
-        className={`text-green-600 ${
-          !isActive
-            ? "text-green-900 cursor-not-allowed"
-            : "hover:text-green-300"
-        }`}
+        className={`${
+          isLoading ? "text-green-600" : "text-green-600 hover:text-green-300"
+        } ${!isActive ? "text-green-900" : ""}`}
         onClick={handleStart}
-        disabled={!isActive}
+        disabled={!isActive || isLoading}
       >
         {isLoading ? <LoadingSpinner /> : <Icon name="play"></Icon>}
       </button>

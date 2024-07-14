@@ -16,7 +16,6 @@ const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
   const handleToggle = async (newState: boolean) => {
     setIsLoading(true);
     setIsActive(newState);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
       if (newState) {
         (await postApiData(`/api/tasks/activate/${task._id}`, {}, authHeader))
