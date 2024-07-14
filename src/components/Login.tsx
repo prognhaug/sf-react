@@ -22,7 +22,7 @@ const Login = () => {
           userState: res.data.result.data.administrator,
         })
       ) {
-        navigate("/setup");
+        navigate("/dashboard");
       } else {
         alert("Invalid login credentials. Please try again.");
       }
@@ -34,6 +34,7 @@ const Login = () => {
       } else if (axiosError.request) {
         alert("Network error. Please check your connection and try again.");
       } else {
+        console.error(axiosError);
         alert("An unexpected error occurred. Please try again later.");
       }
     }

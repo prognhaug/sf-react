@@ -34,7 +34,7 @@ const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
     }
   };
   return (
-    <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900">
       <TaskCell>{task.companyInfo?.name}</TaskCell>
       <TaskCell>{task.name}</TaskCell>
       <TaskCell>{dateString(task.lastRunDate)}</TaskCell>

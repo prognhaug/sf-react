@@ -16,7 +16,6 @@ const TaskActionCell = ({ isActive, task }: TaskActionCellProps) => {
 
   const handleStart = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
       await postApiData(`/api/tasks/run/${task._id}`, {}, authHeader);
     } catch (error) {
@@ -26,22 +25,26 @@ const TaskActionCell = ({ isActive, task }: TaskActionCellProps) => {
   };
   return (
     <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap flex justify-between">
-      <button className="text-amber-500 hover:text-indigo-900">
+      <button className="text-amber-600 hover:text-amber-300">
         <Icon name="pencilSquare"></Icon>
       </button>
-      <button className="text-red-600 hover:text-red-900">
+      <button className="text-red-600 hover:text-red-300">
         <Icon name="trashCan"></Icon>
       </button>
       <button
         className={`${
-          isLoading ? "text-green-600" : "text-green-600 hover:text-green-300"
-        } ${!isActive ? "text-green-900" : ""}`}
+          isLoading
+            ? "text-green-600"
+            : isActive
+            ? "text-green-600 hover:text-green-300"
+            : "text-green-900"
+        }`}
         onClick={handleStart}
         disabled={!isActive || isLoading}
       >
         {isLoading ? <LoadingSpinner /> : <Icon name="play"></Icon>}
       </button>
-      <button className="text-green-600 hover:text-green-900">
+      <button className="text-blue-600 hover:text-blue-300">
         <Icon name="book"></Icon>
       </button>
     </td>
