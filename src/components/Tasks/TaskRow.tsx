@@ -10,19 +10,28 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
   const authHeader = useAuthHeader();
   const [isActive, setIsActive] = useState(task.active);
+  const [isLoading, setIsLoading] = useState(false);
   const dateString = (date: string | null | undefined) =>
     date ? new Date(date).toLocaleString() : "N/A";
   const handleToggle = async (newState: boolean) => {
+    setIsLoading(true);
     setIsActive(newState);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
       if (newState) {
-        await postApiData(`/api/tasks/activate/${task._id}`, {}, authHeader);
+        (await postApiData(`/api/tasks/activate/${task._id}`, {}, authHeader))
+          ? null
+          : setIsActive(!newState);
       } else {
-        await postApiData(`/api/tasks/deactivate/${task._id}`, {}, authHeader);
+        (await postApiData(`/api/tasks/deactivate/${task._id}`, {}, authHeader))
+          ? null
+          : setIsActive(!newState);
       }
     } catch (error) {
       console.error("API call failed:", error);
       setIsActive(!newState);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -39,9 +48,13 @@ const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
       </TaskCell>
       <TaskCell>{dateString(task.nextRunDate)}</TaskCell>
       <TaskCell>
-        <ToggleButton isActive={isActive} onToggle={handleToggle} />
+        <ToggleButton
+          isActive={isActive}
+          onToggle={handleToggle}
+          disabled={isLoading}
+        />
       </TaskCell>
-      <TaskActionCell />
+      <TaskActionCell isActive={isActive} task={task} />
     </tr>
   );
 };
