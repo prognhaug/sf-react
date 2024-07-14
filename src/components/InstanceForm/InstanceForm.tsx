@@ -11,6 +11,7 @@ import { System, Instance } from "../../models/types";
 import { postApiData, putApiData } from "../../utils/apiHandler-copy";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { CompanyContext } from "../../context/CompanyContext";
+import { InstanceContext } from "../../context/InstanceContext";
 import Icon from "../Icon";
 
 interface InstanceFormProps {
@@ -59,6 +60,7 @@ const solutions = [
 ];
 
 const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
+  const { instances, setInstances } = useContext(InstanceContext);
   const [data, setData] = useState(initialState);
   const [connections, setConnections] = useState<
     { connectionId: string; system: System }[]
@@ -154,10 +156,13 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
         { connections: dataToSend.connections },
         authHeader
       );
-      await postApiData(
+      const updatedInstance: Instance | null = await postApiData(
         `/api/instances/${company?.companyID}/${response?._id}/config/add`,
         { ...dataToSend.config },
         authHeader
+      );
+      setInstances(
+        updatedInstance ? [...(instances || []), updatedInstance] : instances
       );
       onClose();
     } catch (error) {

@@ -54,6 +54,7 @@ const TaskTable = () => {
             <TaskHeader>Last Run Status</TaskHeader>
             <TaskHeader>Next Run Date</TaskHeader>
             <TaskHeader>Status</TaskHeader>
+            <TaskHeader>Actions</TaskHeader>
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-gray-800">

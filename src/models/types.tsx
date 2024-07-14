@@ -26,10 +26,10 @@ interface User {
 interface Instance {
   _id: string;
   name: string;
-  connections: string[];
+  connections?: string[];
   solutionID: string | Solution;
-  config: string | Record<string, unknown>;
-  history: string | Event[];
+  config?: string | Record<string, unknown>;
+  history?: string | Event[];
   active: boolean;
   createdAt: string;
   updatedAt: string;

@@ -1,6 +1,8 @@
 import React from "react";
 import { ExtendedTask } from "../../models/types";
 import TaskCell from "./TaskCell";
+import TaskActionCell from "./TaskActionCell";
+import Icon from "../Icon";
 
 const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
   const dateString = (date: string | null | undefined) =>
@@ -10,9 +12,16 @@ const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
       <TaskCell>{task.companyInfo?.name}</TaskCell>
       <TaskCell>{task.name}</TaskCell>
       <TaskCell>{dateString(task.lastRunDate)}</TaskCell>
-      <TaskCell>{task.lastRunSuccess ? "Success" : "Failed"}</TaskCell>
+      <TaskCell>
+        {task.lastRunSuccess ? (
+          <Icon name="success" className="text-green-500"></Icon>
+        ) : (
+          <Icon name="fail" className="text-red-500"></Icon>
+        )}
+      </TaskCell>
       <TaskCell>{dateString(task.nextRunDate)}</TaskCell>
       <TaskCell>{task.active ? "Active" : "Inactive"}</TaskCell>
+      <TaskActionCell />
     </tr>
   );
 };
