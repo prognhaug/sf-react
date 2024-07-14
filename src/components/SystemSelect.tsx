@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchApiData } from "../utils/fetchApiData";
+import { fetchApiData } from "../utils/apiHandler-copy";
 import { System } from "../models/types";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
@@ -22,7 +22,7 @@ const SystemSelect: React.FC<SystemSelectProps> = ({
         {},
         authHeader
       );
-      if (data !== "UNAUTHORIZED" && data !== null) {
+      if (data !== null) {
         setSystems(data);
       } else {
         console.error("Failed to fetch systems or unauthorized");

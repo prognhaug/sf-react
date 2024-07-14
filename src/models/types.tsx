@@ -26,14 +26,18 @@ interface User {
 interface Instance {
   _id: string;
   name: string;
-  connections: string[] | Connection[];
+  connections?: string[];
   solutionID: string | Solution;
-  config: string | Record<string, unknown>;
-  history: string | Event[];
+  config?: string | Record<string, unknown>;
+  history?: string | Event[];
   active: boolean;
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+interface InstanceExpanded extends Omit<Instance, "connections"> {
+  connections: Connection[];
 }
 
 interface Connection {
@@ -90,6 +94,27 @@ interface Event {
   };
 }
 
+interface DataType {
+  instanceID: string; // Assuming instanceID is a string representation of ObjectId
+  companyID: number;
+  debugMode: boolean;
+}
+interface Task {
+  name: string;
+  data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
+  active: boolean;
+  lastRunDate?: string | null;
+  nextRunDate: string;
+  lastRunSuccess?: boolean | null;
+  interval: number;
+  createdAt?: string; // Automatically added by mongoose timestamps
+  updatedAt?: string; // Automatically added by mongoose timestamps
+}
+
+interface ExtendedTask extends Task {
+  companyInfo: Company | undefined;
+}
+
 // Base response interface
 interface BaseResponse {
   status: string;
@@ -128,6 +153,38 @@ interface Auth {
   user?: User;
 }
 
+interface FieldConfig {
+  label: string;
+  type: string;
+  name: string;
+}
+
+interface FormFieldsConnection {
+  [key: string]: FieldConfig[]; // This says every string key maps to an array of FieldConfig
+}
+
+interface FormFieldsInstanceSolution {
+  [key: string]: FieldConfig[];
+}
+
+interface FormFieldsInstanceSettleMatch {
+  [key: string]: FieldConfig[];
+}
+
+interface FormFieldsInstanceCostOfGoods {
+  [key: string]: FieldConfig[];
+}
+
+interface FormFieldsInstance {
+  [key: string]: {
+    [key: string]:
+      | {
+          [key: string]: FieldConfig[];
+        }
+      | FieldConfig[];
+  };
+}
+
 export type {
   Company,
   ApiResponse,
@@ -141,4 +198,13 @@ export type {
   System,
   Event,
   Auth,
+  InstanceExpanded,
+  FieldConfig,
+  FormFieldsConnection,
+  FormFieldsInstanceSolution,
+  FormFieldsInstanceSettleMatch,
+  FormFieldsInstanceCostOfGoods,
+  FormFieldsInstance,
+  Task,
+  ExtendedTask,
 };

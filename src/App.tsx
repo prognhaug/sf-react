@@ -11,6 +11,10 @@ import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import { useState } from "react";
 import { CompanyContext } from "./context/CompanyContext";
 import { InstanceContext } from "./context/InstanceContext";
+import { Connection } from "./models/types";
+import { ConnectionContext } from "./context/ConnectionContext";
+import { CompaniesContext } from "./context/CompaniesContext";
+import NavBar from "./components/NavBar";
 interface IUserData {
   name: string;
   uuid: string;
@@ -26,23 +30,36 @@ const store = createStore<IUserData>({
 export default function App() {
   const [company, setCompany] = useState<Company | undefined>(undefined);
   const [instances, setInstances] = useState<Instance[] | undefined>(undefined);
+  const [connections, setConnections] = useState<Connection[] | undefined>(
+    undefined
+  );
+  const [companies, setCompanies] = useState<Company[] | undefined>(undefined);
 
   return (
     <AuthProvider store={store}>
-      <CompanyContext.Provider value={{ company, setCompany }}>
-        <InstanceContext.Provider value={{ instances, setInstances }}>
-          <Router>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route element={<AuthOutlet fallbackPath="/login" />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/setup" element={<Setup />} />
-              </Route>
-            </Routes>
-          </Router>
-        </InstanceContext.Provider>
-      </CompanyContext.Provider>
+      <CompaniesContext.Provider value={{ companies, setCompanies }}>
+        <CompanyContext.Provider value={{ company, setCompany }}>
+          <InstanceContext.Provider value={{ instances, setInstances }}>
+            <ConnectionContext.Provider value={{ connections, setConnections }}>
+              <Router>
+                <div className=" flex min-h-screen bg-gray-700">
+                  <div className="w-64">
+                    <NavBar />
+                  </div>
+                  <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route element={<AuthOutlet fallbackPath="/login" />}>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/setup" element={<Setup />} />
+                    </Route>
+                  </Routes>
+                </div>
+              </Router>
+            </ConnectionContext.Provider>
+          </InstanceContext.Provider>
+        </CompanyContext.Provider>
+      </CompaniesContext.Provider>
     </AuthProvider>
   );
 }
