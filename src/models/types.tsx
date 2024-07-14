@@ -100,6 +100,7 @@ interface DataType {
   debugMode: boolean;
 }
 interface Task {
+  _id: string;
   name: string;
   data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
   active: boolean;

@@ -53,7 +53,7 @@ const TaskTable = () => {
             <TaskHeader>Last Run Date</TaskHeader>
             <TaskHeader>Last Run Status</TaskHeader>
             <TaskHeader>Next Run Date</TaskHeader>
-            <TaskHeader>Status</TaskHeader>
+            <TaskHeader>Active</TaskHeader>
             <TaskHeader>Actions</TaskHeader>
           </tr>
         </thead>
