@@ -1,33 +1,14 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import TaskRow from "./TaskRow";
-import { Task, ExtendedTask, Company } from "../../../../models/types";
-import { fetchApiData } from "../../../../utils/apiHandler-copy";
+import { Task, ExtendedTask, Company } from "../../../../lib";
 import { CompaniesContext } from "../../../../context/CompaniesContext";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import useFetch from "../../../../hooks/useFetch";
 import TaskHeader from "./TaskHeader";
 
 const TaskTable = () => {
-  const authHeader = useAuthHeader();
-  const [tasks, setTasks] = useState<Task[]>([]);
   const { companies } = useContext(CompaniesContext);
 
-  useEffect(() => {
-    async function fetchTasks(): Promise<void> {
-      try {
-        const fetchedTasks = await fetchApiData<Task[]>(
-          "/api/tasks/",
-          {},
-          authHeader
-        );
-        if (fetchedTasks) {
-          setTasks(fetchedTasks);
-        }
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    }
-    fetchTasks();
-  }, [authHeader]);
+  const { data: tasks, loading, error } = useFetch<Task[]>("/api/tasks/");
 
   const mergeTasksWithCompanies = (tasks: Task[], companies: Company[]) => {
     return tasks.map((task) => {
@@ -38,10 +19,12 @@ const TaskTable = () => {
     });
   };
 
-  const extendedTasks: ExtendedTask[] = mergeTasksWithCompanies(
-    tasks,
-    companies || []
-  );
+  const extendedTasks: ExtendedTask[] = tasks
+    ? mergeTasksWithCompanies(tasks, companies || [])
+    : [];
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="relative overflow-x-auto p-3 sm:rounded-lg">

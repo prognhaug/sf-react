@@ -5,13 +5,14 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { CompanyContext, ConnectionContext } from "../../../context/";
 import { Icon } from "../../../components/";
 import ReactDOM from "react-dom";
+import { useFetch } from "../../../hooks";
 
 interface ConnectionFormProps {
   onClose: () => void;
 }
 
 const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
-  const [systems, setSystems] = useState<System[]>([]);
+  // const [systems, setSystems] = useState<System[]>([]);
   const [selectedSystemId, setSelectedSystemId] = useState<
     string | undefined
   >();
@@ -20,6 +21,8 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
   const { company } = useContext(CompanyContext);
   const [isConnectionAdded, setIsConnectionAdded] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const { data: systems } = useFetch<System[]>("/api/systems/all");
 
   useEffect(() => {
     if (isConnectionAdded) {
@@ -30,26 +33,6 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
       return () => clearTimeout(timer);
     }
   }, [isConnectionAdded]);
-
-  useEffect(() => {
-    const fetchSystems = async () => {
-      try {
-        const response = await fetchApiData<System[]>(
-          "/api/systems/all",
-          {},
-          authHeader
-        );
-        if (response !== null) {
-          setSystems(response);
-        } else {
-          console.error("Failed to fetch companies or unauthorized");
-        }
-      } catch (error) {
-        console.error("Failed to fetch companies:", error);
-      }
-    };
-    fetchSystems();
-  }, [authHeader]);
 
   // Handle form submission
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -128,13 +111,13 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
           <select
             id="systemSelect"
             className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
-            value={selectedSystemId}
+            value={selectedSystemId ? selectedSystemId : ""}
             onChange={(e) => setSelectedSystemId(e.target.value)}
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               Select System
             </option>
-            {systems.map((system) => (
+            {systems?.map((system) => (
               <option key={system._id} value={system._id}>
                 {system.name}
               </option>

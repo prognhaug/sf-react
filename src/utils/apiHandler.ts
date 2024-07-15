@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { ApiResponse, SuccessApiResponse } from "../models/types";
+import { ApiResponse, SuccessApiResponse } from "../lib";
 
 function isSuccessApiResponse<T>(
   response: ApiResponse
