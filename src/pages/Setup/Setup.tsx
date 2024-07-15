@@ -95,42 +95,40 @@ const Setup = () => {
           <div>
             <h2 className="text-white mb-2">Company Details</h2>
             <CompanyDetails company={company} />
+
+            <h2 className="text-white mb-2">
+              Instances{" "}
+              <button
+                onClick={() =>
+                  solutions.length > 0 ? handleClick(false) : handleClick(true)
+                }
+              >
+                +
+              </button>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {instances?.map((instance, index) => (
+                <div key={index}>
+                  <InstanceCard instance={instance} triggerRefresh={refresh} />
+                </div>
+              ))}
+            </div>
+
+            <h2 className="text-white mb-2">
+              Connections <button onClick={toggleConnectionForm}>+</button>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {connections?.map((connection, index) => (
+                <div key={index}>
+                  <ConnectionCard
+                    connection={connection}
+                    triggerRefresh={refresh}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         )}
-        <div>
-          <h2 className="text-white mb-2">
-            Instances{" "}
-            <button
-              onClick={() =>
-                solutions.length > 0 ? handleClick(false) : handleClick(true)
-              }
-            >
-              +
-            </button>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {instances?.map((instance, index) => (
-              <div key={index}>
-                <InstanceCard instance={instance} triggerRefresh={refresh} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h2 className="text-white mb-2">
-            Connections <button onClick={toggleConnectionForm}>+</button>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {connections?.map((connection, index) => (
-              <div key={index}>
-                <ConnectionCard
-                  connection={connection}
-                  triggerRefresh={refresh}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
         {showConnectionForm && (
           <ConnectionForm
             onClose={handleCloseConnectionForm}
