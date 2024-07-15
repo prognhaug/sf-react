@@ -47,7 +47,6 @@ const InstanceCard: React.FC<InstanceCardProps> = ({
         `/api/instances/${company?.companyID}/${instance._id}`,
         { headers: { Authorization: authHeader } }
       );
-      console.log("instance deleted successfully");
       setInstances(instances?.filter((inst) => inst._id !== instance._id));
       triggerRefresh();
     } catch (error) {

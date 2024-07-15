@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchApiData } from "../../../utils/apiHandler-copy";
+import { fetchApiData } from "../../../utils/apiHandler";
 import { System } from "../../../lib/";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 

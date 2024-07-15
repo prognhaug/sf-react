@@ -38,7 +38,6 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
         `/api/connections/${company?.companyID}/${connection._id}`,
         { headers: { Authorization: authHeader } }
       );
-      console.log("Connection deleted successfully");
       setConnections(
         connections?.filter((conn) => conn._id !== connection._id)
       );

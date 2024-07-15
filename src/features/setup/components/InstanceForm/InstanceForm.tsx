@@ -9,7 +9,7 @@ import {
 } from "../../../../lib";
 import GenericForm from "./GenericForm";
 import { ConfigurationForm } from "./ConfigurationForm";
-import { postApiData, putApiData } from "../../../../utils/apiHandler-copy";
+import { postApiData, putApiData } from "../../../../utils/apiHandler";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { CompanyContext, InstanceContext } from "../../../../context/";
 import { Icon } from "../../../../components/";
@@ -75,7 +75,6 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
   const authHeader = useAuthHeader();
 
   const handleConfigChange = (formData: { [key: string]: string }) => {
-    console.log("formData", formData);
     setData((prev) => ({
       ...prev,
       config: {
@@ -113,7 +112,6 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
       const configOrFields = selectedSolutionConfig[configType];
 
       if (Array.isArray(configOrFields)) {
-        console.log("configType", configType, "configOrFields", configOrFields);
         setSteps((prev) => [
           ...prev,
           <GenericForm
@@ -147,7 +145,6 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
   }
 
   async function save() {
-    console.log(data);
     const dataToSend = mapInstanceData(data);
     try {
       const response: Instance | null = await postApiData(

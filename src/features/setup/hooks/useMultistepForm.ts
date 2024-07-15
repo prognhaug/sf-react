@@ -6,7 +6,6 @@ export function useMultistepForm(steps: ReactElement[]) {
   function next(event?: React.MouseEvent) {
     event?.stopPropagation();
     setCurrentStepIndex((i: number) => {
-      console.log("i: ", i, "steps.length: ", steps.length - 1);
       if (i >= steps.length - 1) return i;
       return i + 1;
     });
