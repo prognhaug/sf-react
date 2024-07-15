@@ -14,7 +14,7 @@ import { InstanceContext } from "./context/InstanceContext";
 import { Connection } from "./models/types";
 import { ConnectionContext } from "./context/ConnectionContext";
 import { CompaniesContext } from "./context/CompaniesContext";
-import NavBar from "./components/NavBar";
+import NavBar from "./layouts/NavBar";
 interface IUserData {
   name: string;
   uuid: string;

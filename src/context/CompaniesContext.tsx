@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Company } from "../models/types";
+import { Company } from "../lib";
 
 interface ICompaniesContext {
   companies: Company[] | undefined;

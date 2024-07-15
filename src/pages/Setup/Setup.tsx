@@ -1,13 +1,17 @@
-import CompanyDetails from "../../components/CompanyDetails";
-import InstanceCard from "../../components/InstanceCard";
-import ConnectionCard from "../../components/ConnectionCard";
-import { CompanyContext } from "../../context/CompanyContext";
+import {
+  CompanyDetails,
+  InstanceCard,
+  ConnectionCard,
+  ConnectionForm,
+  InstanceForm,
+} from "../../features/";
+import {
+  CompanyContext,
+  InstanceContext,
+  ConnectionContext,
+} from "../../context/";
 import { useContext, useState } from "react";
-import { InstanceContext } from "../../context/InstanceContext";
-import { ConnectionContext } from "../../context/ConnectionContext";
-import InstanceForm from "../../components/InstanceForm/InstanceForm";
-import ConnectionForm from "../../components/ConnectionForm";
-import { Solution } from "../../models/types";
+import { Solution } from "../../lib/";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { fetchApiData } from "../../utils/apiHandler-copy";
 

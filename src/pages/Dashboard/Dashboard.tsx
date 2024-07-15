@@ -1,5 +1,5 @@
 import React from "react";
-import TaskTable from "../../components/Tasks/TaskTable";
+import { TaskTable } from "../../features/";
 
 const Dashboard: React.FC = () => {
   return (
