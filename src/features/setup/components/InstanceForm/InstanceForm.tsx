@@ -16,6 +16,7 @@ import { Icon } from "../../../../components/";
 
 interface InstanceFormProps {
   onClose: () => void;
+  triggerRefresh: () => void;
 }
 
 type InstanceFormData = {
@@ -59,7 +60,10 @@ const solutions = [
   },
 ];
 
-const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
+const InstanceForm: React.FC<InstanceFormProps> = ({
+  onClose,
+  triggerRefresh,
+}) => {
   const { instances, setInstances } = useContext(InstanceContext);
   const [data, setData] = useState(initialState);
   const [connections, setConnections] = useState<
@@ -165,6 +169,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({ onClose }) => {
         updatedInstance ? [...(instances || []), updatedInstance] : instances
       );
       onClose();
+      triggerRefresh();
     } catch (error) {
       console.error("Error saving instance:", error);
     }

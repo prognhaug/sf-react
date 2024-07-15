@@ -18,7 +18,8 @@ const paramsEmpty = {};
 function useFetch<T>(
   url: string,
   params: Record<string, string> = paramsEmpty,
-  dependencies: React.DependencyList = []
+  dependencies: React.DependencyList = [],
+  updateFn?: (data: T) => void
 ): {
   data: T | null;
   loading: boolean;
@@ -51,6 +52,9 @@ function useFetch<T>(
         if (isMounted) {
           if (isSuccessApiResponse<T>(response.data)) {
             setData(response.data.result.data);
+            if (updateFn) {
+              updateFn(response.data.result.data); // Call the update function with the fetched data
+            }
           } else {
             setError(new Error("An error occurred while fetching data"));
           }
@@ -68,7 +72,7 @@ function useFetch<T>(
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, params, token, ...dependencies]);
+  }, [url, params, token, ...dependencies, updateFn]);
 
   return { data, loading, error };
 }

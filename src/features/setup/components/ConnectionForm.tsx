@@ -1,22 +1,27 @@
 import { useState, FormEvent, useEffect, useContext } from "react";
-import { fetchApiData, postApiData } from "../../../utils/apiHandler-copy";
-import { System, Connection, formFieldsConnection } from "../../../lib/";
+import { postApiData } from "../../../utils/apiHandler-copy";
+import { System, formFieldsConnection } from "../../../lib/";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { CompanyContext, ConnectionContext } from "../../../context/";
+import { CompanyContext } from "../../../context/";
 import { Icon } from "../../../components/";
 import ReactDOM from "react-dom";
 import { useFetch } from "../../../hooks";
 
 interface ConnectionFormProps {
   onClose: () => void;
+  triggerRefresh: () => void;
 }
 
-const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
+const ConnectionForm: React.FC<ConnectionFormProps> = ({
+  onClose,
+  triggerRefresh,
+}) => {
   // const [systems, setSystems] = useState<System[]>([]);
   const [selectedSystemId, setSelectedSystemId] = useState<
     string | undefined
   >();
-  const { setConnections } = useContext(ConnectionContext);
+  // const [requestBody, setRequestBody] = useState<Record<string, string>>();
+  // const { connections, setConnections } = useContext(ConnectionContext);
   const authHeader = useAuthHeader();
   const { company } = useContext(CompanyContext);
   const [isConnectionAdded, setIsConnectionAdded] = useState(false);
@@ -45,42 +50,17 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({ onClose }) => {
       ...formValues,
       systemID: selectedSystemId,
     };
-    const fetchConnections = async () => {
-      try {
-        const response = await fetchApiData<Connection[] | null>(
-          `/api/connections/${company?.companyID}`,
-          { fields: "systemID" },
-          authHeader
-        );
-        if (response === null) {
-          setConnections([]);
-          return;
-        } else if (response !== null) {
-          setConnections(response);
-        } else {
-          console.error("Failed to fetch connections or unauthorized");
-        }
-      } catch (error) {
-        console.error("Failed to fetch connections:", error);
-      }
-    };
     const postConnection = async () => {
       try {
-        const response = await postApiData(
+        await postApiData(
           `/api/connections/${company?.companyID}/add`,
-
           requestBody,
           authHeader
         );
-        if (response !== null) {
-          console.log("Connection added successfully");
-          fetchConnections();
-          onClose();
-          setIsConnectionAdded(true);
-          form.reset();
-        } else {
-          console.error("Failed to add connection");
-        }
+        triggerRefresh();
+        onClose();
+        setIsConnectionAdded(true);
+        form.reset();
       } catch (error) {
         console.error("Failed to add connection:", error);
       }

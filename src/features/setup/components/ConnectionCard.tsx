@@ -5,8 +5,14 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-const ConnectionCard: React.FC<{ connection: Connection }> = ({
+interface ConnectionCardProps {
+  connection: Connection;
+  triggerRefresh: () => void;
+}
+
+const ConnectionCard: React.FC<ConnectionCardProps> = ({
   connection,
+  triggerRefresh,
 }) => {
   const authHeader = useAuthHeader();
   const { company } = useContext(CompanyContext);
@@ -36,6 +42,7 @@ const ConnectionCard: React.FC<{ connection: Connection }> = ({
       setConnections(
         connections?.filter((conn) => conn._id !== connection._id)
       );
+      triggerRefresh();
     } catch (error) {
       console.error("Error deleting connection:", error);
     } finally {

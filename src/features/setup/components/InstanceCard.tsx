@@ -9,7 +9,15 @@ import axios from "axios";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Icon, Popup } from "../../../components/";
 
-const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
+interface InstanceCardProps {
+  instance: Instance;
+  triggerRefresh: () => void;
+}
+
+const InstanceCard: React.FC<InstanceCardProps> = ({
+  instance,
+  triggerRefresh,
+}) => {
   const authHeader = useAuthHeader();
   const { setInstances, instances } = useContext(InstanceContext);
   const { company } = useContext(CompanyContext);
@@ -41,6 +49,7 @@ const InstanceCard: React.FC<{ instance: Instance }> = ({ instance }) => {
       );
       console.log("instance deleted successfully");
       setInstances(instances?.filter((inst) => inst._id !== instance._id));
+      triggerRefresh();
     } catch (error) {
       console.error("Error deleting instance:", error);
     } finally {

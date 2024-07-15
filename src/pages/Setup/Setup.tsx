@@ -5,21 +5,49 @@ import {
   ConnectionForm,
   InstanceForm,
 } from "../../features/";
-import {
-  CompanyContext,
-  InstanceContext,
-  ConnectionContext,
-} from "../../context/";
+import { CompanyContext } from "../../context/";
 import { useContext, useState } from "react";
 import { Solution } from "../../lib/";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { fetchApiData } from "../../utils/apiHandler-copy";
+import { fetchApiData } from "../../utils/apiHandler";
+import { useFetch } from "../../hooks/";
+import { Instance, Connection } from "../../lib/";
+import {
+  useUpdateInstancesContext,
+  useUpdateConnectionsContext,
+} from "../../hooks/";
+
+const instanceParamsObject = {
+  fields: "solutionID",
+  filter: '{ "active": "true" }',
+};
+
+const connectionParamsObject = {
+  fields: "systemID",
+};
 
 const Setup = () => {
   const [showInstanceForm, setShowInstanceForm] = useState(false);
   const [showConnectionForm, setShowConnectionForm] = useState(false);
   const [solutions, setSolutions] = useState<Solution[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
   const authHeader = useAuthHeader();
+  const { company } = useContext(CompanyContext);
+
+  const { data: instances } = useFetch<Instance[]>(
+    company ? `/api/instances/${company.companyID}` : "",
+    instanceParamsObject,
+    [company, triggerRefresh]
+  );
+
+  const { data: connections } = useFetch<Connection[]>(
+    company ? `/api/connections/${company.companyID}` : "",
+    connectionParamsObject,
+    [company, triggerRefresh]
+  );
+
+  useUpdateInstancesContext(instances);
+  useUpdateConnectionsContext(connections);
 
   const toggleInstanceForm = () => {
     setShowInstanceForm(true);
@@ -44,9 +72,9 @@ const Setup = () => {
       fetchSolutions();
     }
   };
-  const { company } = useContext(CompanyContext);
-  const { instances } = useContext(InstanceContext);
-  const { connections } = useContext(ConnectionContext);
+  const refresh = () => {
+    setTriggerRefresh((prevState) => !prevState);
+  };
   const fetchSolutions = async () => {
     try {
       const response = await fetchApiData<Solution[]>(
@@ -54,11 +82,7 @@ const Setup = () => {
         { filter: '{ "active": "true" }' },
         authHeader
       );
-      if (response !== null) {
-        setSolutions(response);
-      } else {
-        console.error("Failed to fetch solutions or unauthorized");
-      }
+      setSolutions(response);
     } catch (error) {
       console.error("Failed to fetch solutions:", error);
     }
@@ -87,7 +111,7 @@ const Setup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {instances?.map((instance, index) => (
               <div key={index}>
-                <InstanceCard instance={instance} />
+                <InstanceCard instance={instance} triggerRefresh={refresh} />
               </div>
             ))}
           </div>
@@ -99,15 +123,26 @@ const Setup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {connections?.map((connection, index) => (
               <div key={index}>
-                <ConnectionCard connection={connection} />
+                <ConnectionCard
+                  connection={connection}
+                  triggerRefresh={refresh}
+                />
               </div>
             ))}
           </div>
         </div>
         {showConnectionForm && (
-          <ConnectionForm onClose={handleCloseConnectionForm} />
+          <ConnectionForm
+            onClose={handleCloseConnectionForm}
+            triggerRefresh={refresh}
+          />
         )}
-        {showInstanceForm && <InstanceForm onClose={handleCloseInstanceForm} />}
+        {showInstanceForm && (
+          <InstanceForm
+            onClose={handleCloseInstanceForm}
+            triggerRefresh={refresh}
+          />
+        )}
         {/* {showInstanceForm && (
             <InstanceForm
               onClose={handleCloseInstanceForm}

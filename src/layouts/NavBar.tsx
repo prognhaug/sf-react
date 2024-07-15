@@ -1,24 +1,11 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import { Company, Instance, Connection } from "../lib/";
+import { Company } from "../lib/";
 import { CompanyContext } from "../context/";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import useFetch from "../hooks/useFetch";
-import {
-  useUpdateCompaniesContext,
-  useUpdateInstancesContext,
-  useUpdateConnectionsContext,
-} from "../hooks/";
-
-const instanceParamsObject = {
-  fields: "solutionID",
-  filter: '{ "active": "true" }',
-};
-
-const connectionParamsObject = {
-  fields: "systemID",
-};
+import { useUpdateCompaniesContext } from "../hooks/";
 
 const companiesParamsObject = {
   // Define your parameters here
@@ -39,20 +26,8 @@ const NavBar = () => {
     "/api/companies/all",
     companiesParamsObject
   );
-  const { data: instances } = useFetch<Instance[]>(
-    selectedCompany ? `/api/instances/${selectedCompany.companyID}` : "",
-    instanceParamsObject,
-    [selectedCompany]
-  );
 
-  const { data: connections } = useFetch<Connection[]>(
-    selectedCompany ? `/api/connections/${selectedCompany.companyID}` : "",
-    connectionParamsObject,
-    [selectedCompany]
-  );
   useUpdateCompaniesContext(companies);
-  useUpdateInstancesContext(instances);
-  useUpdateConnectionsContext(connections);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
