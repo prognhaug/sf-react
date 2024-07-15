@@ -124,6 +124,18 @@ const fail = () => (
   </svg>
 );
 
+const vipps = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="FF5B24">
+    <path
+      className="st0"
+      fill="#FF5B24"
+      d="M57.3,40.6c3.7,0,5.8-1.8,7.8-4.4c1.1-1.4,2.5-1.7,3.5-0.9s1.1,2.3,0,3.7c-2.9,3.8-6.6,6.1-11.3,6.1
+      c-5.1,0-9.6-2.8-12.7-7.7c-0.9-1.3-0.7-2.7,0.3-3.4s2.5-0.4,3.4,1C50.5,38.3,53.5,40.6,57.3,40.6z M64.2,28.3c0,1.8-1.4,3-3,3
+      s-3-1.2-3-3s1.4-3,3-3C62.8,25.3,64.2,26.6,64.2,28.3z"
+    />
+  </svg>
+);
+
 // Update svgIcons to store React components
 const svgIcons = {
   xcircle: XCircleIcon,
@@ -133,6 +145,7 @@ const svgIcons = {
   book: book,
   success: success,
   fail: fail,
+  vipps: vipps,
 };
 
 // Updated Icon component
