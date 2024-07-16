@@ -1,11 +1,12 @@
 import { Connection, System } from "../../../lib/";
 import { Icon, Popup } from "../../../components";
 import { CompanyContext, ConnectionContext } from "../../../context/";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import axios from "axios";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Vipps from "../../../assets/Vipps";
 import Tripletex from "../../../assets/Tripletex";
+import { useOutsideClick } from "../../../hooks/";
 
 interface ConnectionCardProps {
   connection: Connection;
@@ -21,6 +22,12 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   const { connections, setConnections } = useContext(ConnectionContext);
   const [showPopup, setShowPopup] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useOutsideClick([dropdownRef, buttonRef], isDropdownOpen, () =>
+    setIsDropdownOpen(false)
+  );
 
   const isSystem = (SystemID: System | unknown): SystemID is System => {
     return (SystemID as System).name !== undefined;
@@ -50,56 +57,53 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
     } catch (error) {
       console.error("Error deleting connection:", error);
     } finally {
-      setShowPopup(false); // Hide the popup after deletion
+      setShowPopup(false);
     }
   };
 
   const cancelDelete = () => {
-    setShowPopup(false); // Hide the popup if deletion is canceled
+    setShowPopup(false);
   };
 
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="flex justify-end px-4 pt-4">
+      <div className="flex justify-end px-4 pt-4 relative">
         <button
-          id="dropdownButton"
-          data-dropdown-toggle="dropdown"
+          ref={buttonRef}
           className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
           type="button"
           onClick={toggleDropdown}
         >
-          <svg
-            className="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 16 3"
-          >
-            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-          </svg>
+          <Icon name="threeDots" />
         </button>
         <div
-          id="dropdown"
+          ref={dropdownRef}
           className={`z-10 ${
             isDropdownOpen ? "block" : "hidden"
-          } text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}
+          } text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-full mt-1`}
         >
-          <ul className="py-2" aria-labelledby="dropdownButton">
+          <ul className="py-2">
             <li>
-              <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+              <button className="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                 Edit
-              </a>
+              </button>
             </li>
             <li>
-              <a className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+              <button
+                className="w-full block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                onClick={() => {
+                  handleDelete();
+                  setIsDropdownOpen(false);
+                }}
+              >
                 Delete
-              </a>
+              </button>
             </li>
           </ul>
         </div>
       </div>
       <div className="flex flex-col items-center pb-10">
-        {SystemName === "Vipps" ? (
+        {SystemName === "Tripletex" ? (
           <Tripletex className="w-40 h-40" />
         ) : (
           <Vipps className="w-40 h-40" />
@@ -111,6 +115,13 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
           {SystemName}
         </span>
       </div>
+      {showPopup && (
+        <Popup
+          message="Are you sure you want to delete this connection?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
     // <div className="relativ overflow-hidden p-3">
     //   <div className="relative">

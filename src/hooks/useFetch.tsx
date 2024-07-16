@@ -31,6 +31,7 @@ function useFetch<T>(
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     let isMounted = true;
 
     const fetchData = async () => {
@@ -48,6 +49,7 @@ function useFetch<T>(
               Authorization: token,
             },
             params,
+            signal: controller.signal,
           });
         if (isMounted) {
           if (isSuccessApiResponse<T>(response.data)) {
@@ -69,6 +71,7 @@ function useFetch<T>(
     fetchData();
 
     return () => {
+      controller.abort();
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
