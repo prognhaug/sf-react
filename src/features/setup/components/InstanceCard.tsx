@@ -1,21 +1,28 @@
-import { Instance, Solution } from "../../../lib/";
-import { useContext } from "react";
-import { ConnectionContext } from "../../../context/";
+import { Instance, Solution, Connection } from "../../../lib/";
 
-const InstanceCard = (instance: Instance) => {
-  const { connections } = useContext(ConnectionContext);
+interface InstanceCardProps {
+  instance: Instance;
+  connections: Connection[];
+}
+
+const InstanceCard: React.FC<InstanceCardProps> = ({
+  instance,
+  connections,
+}) => {
   const isSolution = (
     solutionID: Solution | unknown
   ): solutionID is Solution => {
     return (solutionID as Solution).name !== undefined;
   };
+
+  // Check if instance.solutionID is not undefined before proceeding
   const solutionName =
     instance.solutionID && isSolution(instance.solutionID)
       ? instance.solutionID.name
       : "";
 
   const instanceConnections = instance.connections
-    ? connections?.filter((conn) =>
+    ? connections.filter((conn) =>
         instance.connections?.includes(conn._id as string)
       )
     : [];
@@ -27,8 +34,11 @@ const InstanceCard = (instance: Instance) => {
       </h5>
 
       <div className="flex justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-        {instanceConnections?.map((connection) => (
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+        {instanceConnections.map((connection) => (
+          <span
+            key={connection._id}
+            className="text-sm text-gray-500 dark:text-gray-400"
+          >
             {connection.name}
           </span>
         ))}

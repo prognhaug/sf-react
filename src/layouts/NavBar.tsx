@@ -58,24 +58,24 @@ const NavBar = () => {
     toggleDropdown();
   };
   return (
-    <nav className="w-64 h-screen bg-gray-800 text-white flex flex-col">
+    <nav className="w-64 h-screen backdrop-blur-sm bg-white/5 text-white flex flex-col">
       {isAuthenticated && (
         <>
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative " ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
-              className="px-5 py-3 w-full text-left hover:bg-gray-700"
+              className="px-5 py-3 w-full text-left  hover:bg-white/10"
             >
               {selectedCompany?.name || "Choose Company"}
             </button>
             {isDropdownOpen && (
-              <div className="absolute left-full top-0 bg-gray-800 w-64 z-50">
+              <div className="absolute left-full backdrop-blur-lg bg-black/70 top-0  w-64 ">
                 {companies
                   ?.filter((company) => company._id !== selectedCompany?._id)
                   .map((company) => (
                     <button
                       key={company._id}
-                      className="px-5 py-3 hover:bg-gray-700 block border w-full"
+                      className="px-5 py-3 hover:bg-white/10 block border backdrop-blur-lg border-white/10 w-full"
                       onClick={() => {
                         handleSelectCompany(company);
                       }}
@@ -89,7 +89,9 @@ const NavBar = () => {
           <Link
             to="/setup"
             className={`px-5 py-3 ${
-              isActive("/setup") ? "bg-gray-700" : "hover:bg-gray-700"
+              isActive("/setup")
+                ? "backdrop-blur-lg bg-white/10"
+                : "hover:bg-white/10"
             }`}
           >
             Setup
@@ -97,7 +99,9 @@ const NavBar = () => {
           <Link
             to="/dashboard"
             className={`px-5 py-3 ${
-              isActive("/dashboard") ? "bg-gray-700" : "hover:bg-gray-700"
+              isActive("/dashboard")
+                ? "backdrop-blur-lg bg-white/10"
+                : "hover:bg-white/10"
             }`}
           >
             Dashboard
@@ -106,7 +110,7 @@ const NavBar = () => {
       )}
       {isAuthenticated ? (
         <button
-          className="px-5 py-3 hover:bg-gray-700 text-left"
+          className="px-5 py-3 hover:bg-white/10 text-left"
           onClick={() => {
             signOut();
             navigate("/login");
@@ -118,7 +122,9 @@ const NavBar = () => {
         <Link
           to="/login"
           className={`px-5 py-3 ${
-            isActive("/login") ? "bg-gray-700" : "hover:bg-gray-700"
+            isActive("/login")
+              ? "hover:backdrop-blur-lg bg-white/10"
+              : "hover:bg-white/10"
           }`}
         >
           Log In

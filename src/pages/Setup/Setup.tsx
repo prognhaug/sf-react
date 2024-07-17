@@ -1,9 +1,9 @@
 import {
-  CompanyDetails,
   InstanceCard,
   ConnectionCard,
   ConnectionForm,
   InstanceForm,
+  EntityCard,
 } from "../../features/";
 import { CompanyContext } from "../../context/";
 import { useContext, useState } from "react";
@@ -16,7 +16,7 @@ import {
   useUpdateInstancesContext,
   useUpdateConnectionsContext,
 } from "../../hooks/";
-import { EntityCard } from "../../layouts/";
+// import { EntityCard } from "../../layouts/";
 
 const instanceParamsObject = {
   fields: "solutionID",
@@ -88,6 +88,7 @@ const Setup = () => {
       console.error("Failed to fetch solutions:", error);
     }
   };
+
   return (
     <div className="flex-1 flex flex-col items-center w-full px-5">
       <h1 className="text-3xl font-bold dark:text-white mb-4 mt-4">
@@ -121,7 +122,12 @@ const Setup = () => {
                     entity={instance}
                     triggerRefresh={refresh}
                     apiEndpoint="/api/instances"
-                    customUI={InstanceCard(instance)}
+                    customUI={
+                      <InstanceCard
+                        instance={instance}
+                        connections={connections || []}
+                      />
+                    }
                   />
                 </div>
               ))}

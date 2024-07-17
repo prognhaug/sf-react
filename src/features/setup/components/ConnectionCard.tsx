@@ -1,6 +1,7 @@
 import Vipps from "../../../assets/Vipps";
 import Tripletex from "../../../assets/Tripletex";
 import { Connection, System } from "../../../lib/";
+import Klarna from "../../../assets/klarna.png";
 
 const ConnectionCard = (connection: Connection) => {
   const isSystem = (SystemID: System | string): SystemID is System => {
@@ -11,13 +12,23 @@ const ConnectionCard = (connection: Connection) => {
     ? connection.systemID.name
     : "";
 
+  const renderSystemIcon = (systemName: string) => {
+    console.log(systemName);
+    switch (systemName) {
+      case "Tripletex":
+        return <Tripletex className="w-40 h-40" />;
+      case "Klarna":
+        return <img src={Klarna} className="w-40 h-40 object-contain" />;
+      case "Vipps":
+        return <Vipps className="w-40 h-40" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
-      {systemName === "Tripletex" ? (
-        <Tripletex className="w-40 h-40" />
-      ) : (
-        <Vipps className="w-40 h-40" />
-      )}
+      {renderSystemIcon(systemName)}
       <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
         {connection.name}
       </h5>

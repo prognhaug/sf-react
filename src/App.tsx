@@ -6,12 +6,11 @@ import Setup from "./pages/Setup/Setup";
 import "./index.css";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
-import { Company, Instance } from "./models/types";
+import { Company, Instance, Connection } from "./lib";
 import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import { useState } from "react";
 import { CompanyContext } from "./context/CompanyContext";
 import { InstanceContext } from "./context/InstanceContext";
-import { Connection } from "./models/types";
 import { ConnectionContext } from "./context/ConnectionContext";
 import { CompaniesContext } from "./context/CompaniesContext";
 import NavBar from "./layouts/NavBar";
@@ -42,8 +41,9 @@ export default function App() {
           <InstanceContext.Provider value={{ instances, setInstances }}>
             <ConnectionContext.Provider value={{ connections, setConnections }}>
               <Router>
-                <div className=" flex min-h-screen bg-gray-700">
-                  <div className="w-64">
+                <div className="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
+                <div className="flex z-10 min-h-screen">
+                  <div className="w-64 z-10">
                     <NavBar />
                   </div>
                   <Routes>

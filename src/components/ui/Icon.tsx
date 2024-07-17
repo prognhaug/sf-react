@@ -30,6 +30,9 @@ const pencilSquare = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     className="size-6"
+    style={{
+      filter: "drop-shadow(0 1px 10px rgba(255, 255, 0, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -46,7 +49,10 @@ const trachCan = () => (
     viewBox="0 0 24 24"
     strokeWidth="1.5"
     stroke="currentColor"
-    className="size-6"
+    className="size-6 "
+    style={{
+      filter: "drop-shadow(0 1px 6px rgba(255, 0, 0, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -64,6 +70,9 @@ const play = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     className="size-6"
+    style={{
+      filter: "drop-shadow(0 1px 10px rgba(0, 255, 0, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -81,6 +90,9 @@ const book = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     className="size-6"
+    style={{
+      filter: "drop-shadow(0 1px 10px rgba(173, 216, 230, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -98,6 +110,9 @@ const success = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     className="size-6"
+    style={{
+      filter: "drop-shadow(0 1px 10px rgba(0, 255, 0, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -115,6 +130,9 @@ const fail = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     className="size-6"
+    style={{
+      filter: "drop-shadow(0 1px 10px rgba(255, 0, 0, 0.2))",
+    }}
   >
     <path
       strokeLinecap="round"

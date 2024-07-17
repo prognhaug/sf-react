@@ -5,3 +5,4 @@ export { default as ConnectionCard } from "./ConnectionCard";
 export { default as InstanceCard } from "./InstanceCard";
 export { default as SystemSelect } from "./SystemSelect";
 export { default as ConnectionForm } from "./ConnectionForm";
+export { default as EntityCard } from "./EntityCard";

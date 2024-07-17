@@ -72,7 +72,7 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto"
+        className="relative w-full backdrop-blur-lg max-w-md p-4 bg-white/10 rounded-lg shadow-md mx-auto"
       >
         <button
           onClick={onClose}

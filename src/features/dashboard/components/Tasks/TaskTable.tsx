@@ -27,10 +27,10 @@ const TaskTable = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="relative overflow-x-auto p-3 sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800">
-          <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-white">
+    <div className="relative overflow-x-auto p-3 ">
+      <table className="w-full text-sm text-left">
+        <thead className="text-xs  uppercase ">
+          <tr className=" text-white">
             <TaskHeader>Company Name</TaskHeader>
             <TaskHeader>Instance Name</TaskHeader>
             <TaskHeader>Last Run Date</TaskHeader>
@@ -40,7 +40,7 @@ const TaskTable = () => {
             <TaskHeader>Actions</TaskHeader>
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-gray-800">
+        <tbody>
           {extendedTasks.map((extendedTask, index) => (
             <TaskRow key={index} task={extendedTask} />
           ))}

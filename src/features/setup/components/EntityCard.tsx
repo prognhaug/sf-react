@@ -1,10 +1,10 @@
 import { useContext, useState, useRef } from "react";
 import axios from "axios";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { Icon, Popup } from "../components/";
-import { CompanyContext } from "../context/";
-import { useOutsideClick } from "../hooks/";
-import { Connection, Instance } from "../lib/";
+import { Icon, Popup } from "../../../components";
+import { CompanyContext } from "../../../context";
+import { useOutsideClick } from "../../../hooks";
+import { Connection, Instance } from "../../../lib";
 
 // Generic Entity Props
 interface EntityCardProps {
@@ -56,7 +56,7 @@ const EntityCard = ({
   };
 
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full max-w-sm backdrop-blur-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-white/5 dark:border-gray-700">
       <div className="flex justify-end px-4 pt-4 relative">
         <button
           ref={buttonRef}
