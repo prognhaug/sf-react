@@ -14,6 +14,7 @@ import { InstanceContext } from "./context/InstanceContext";
 import { ConnectionContext } from "./context/ConnectionContext";
 import { CompaniesContext } from "./context/CompaniesContext";
 import NavBar from "./layouts/NavBar";
+import { History } from "./pages/History/";
 interface IUserData {
   name: string;
   uuid: string;
@@ -51,6 +52,10 @@ export default function App() {
                     <Route element={<AuthOutlet fallbackPath="/login" />}>
                       <Route path="/" element={<Home />} />
                       <Route path="/dashboard" element={<Dashboard />} />
+                      <Route
+                        path="/history/:companyId/:instanceId"
+                        element={<History />}
+                      />
                       <Route path="/setup" element={<Setup />} />
                     </Route>
                   </Routes>

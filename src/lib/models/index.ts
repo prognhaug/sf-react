@@ -20,4 +20,5 @@ export type {
   FormFieldsInstance,
   Task,
   ExtendedTask,
+  History,
 } from "./types";

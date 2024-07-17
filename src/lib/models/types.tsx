@@ -23,6 +23,22 @@ export interface User {
   __v: number;
 }
 
+interface Payout {
+  payoutId: string | number;
+}
+export interface History {
+  _id: string;
+  debugMode: boolean;
+  matchedSettlements?: number;
+  totalSettlements?: number;
+  payout?: Payout;
+  runStartTimestamp: string;
+  runEndTimestamp: string;
+  logEntries: Record<string, unknown>[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Instance {
   _id: string;
   name: string;

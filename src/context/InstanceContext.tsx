@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Instance } from "../models/types";
+import { Instance } from "../lib";
 
 interface IInstanceContext {
   instances: Instance[] | undefined;
