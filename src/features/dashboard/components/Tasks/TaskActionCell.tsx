@@ -4,6 +4,7 @@ import { postApiData } from "../../../../utils/apiHandler";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { useState } from "react";
 import LoadingSpinner from "../../../../components/ui/LoadingSpinner";
+import { Link } from "react-router-dom";
 
 interface TaskActionCellProps {
   isActive: boolean;
@@ -45,7 +46,12 @@ const TaskActionCell = ({ isActive, task }: TaskActionCellProps) => {
         {isLoading ? <LoadingSpinner /> : <Icon name="play"></Icon>}
       </button>
       <button className="text-blue-600 hover:text-blue-300">
-        <Icon name="book"></Icon>
+        <Link
+          to={`/history/${task.data.companyID}/${task.data.instanceID}`}
+          state={task}
+        >
+          <Icon name="book"></Icon>
+        </Link>
       </button>
     </td>
   );
