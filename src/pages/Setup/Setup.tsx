@@ -89,24 +89,31 @@ const Setup = () => {
     }
   };
   return (
-    <div className="flex-1 flex flex-col items-center">
-      <h1 className="text-white mt-4 mb-2">Setup Page</h1>
-      <div className="w-full p-4">
+    <div className="flex-1 flex flex-col items-center w-full px-5">
+      <h1 className="text-3xl font-bold dark:text-white mb-4 mt-4">
+        Setup Page
+      </h1>
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-500 w-full" />
+      <div className="w-full px-2">
         {company && (
           <div>
-            <h2 className="text-white mb-2">Company Details</h2>
-            <CompanyDetails company={company} />
+            <h2 className="text-3xl font-bold dark:text-white mb-4 justify-center flex">
+              {company.name}
+            </h2>
 
-            <h2 className="text-white mb-2">
-              Instances{" "}
+            <h2 className="text-3xl font-bold dark:text-white mb-2 justify-center flex pt-4">
+              Instances
+            </h2>
+            <div className="flex justify-center pb-2">
               <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
                 onClick={() =>
                   solutions.length > 0 ? handleClick(false) : handleClick(true)
                 }
               >
-                +
+                Add instance
               </button>
-            </h2>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {instances?.map((instance, index) => (
                 <div key={index}>
@@ -120,9 +127,17 @@ const Setup = () => {
               ))}
             </div>
 
-            <h2 className="text-white mb-2">
-              Connections <button onClick={toggleConnectionForm}>+</button>
+            <h2 className="text-3xl font-bold dark:text-white mb-2 justify-center flex pt-4">
+              Connections{" "}
             </h2>
+            <div className="flex justify-center pb-2">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
+                onClick={toggleConnectionForm}
+              >
+                Add connection
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {connections?.map((connection, index) => (
                 <div key={index}>
