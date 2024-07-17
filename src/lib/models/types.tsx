@@ -23,8 +23,15 @@ export interface User {
   __v: number;
 }
 
-interface Payout {
+export interface Payout {
   payoutId: string | number;
+}
+
+export interface LogEntry {
+  _id: string;
+  message: string;
+  timestamp: string;
+  level: string;
 }
 export interface History {
   _id: string;
@@ -34,7 +41,7 @@ export interface History {
   payout?: Payout;
   runStartTimestamp: string;
   runEndTimestamp: string;
-  logEntries: Record<string, unknown>[];
+  logEntries: LogEntry[];
   createdAt: string;
   updatedAt: string;
 }

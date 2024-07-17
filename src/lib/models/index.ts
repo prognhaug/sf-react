@@ -21,4 +21,6 @@ export type {
   Task,
   ExtendedTask,
   History,
+  LogEntry,
+  Payout,
 } from "./types";

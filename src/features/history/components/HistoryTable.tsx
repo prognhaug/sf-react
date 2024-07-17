@@ -4,8 +4,13 @@ import HistoryRow from "./HistoryRow";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ExtendedTask } from "../../../lib";
+import { LogEntry } from "../../../lib";
 
-const HistoryTable = () => {
+interface HistoryTableProps {
+  openLogsWindow: (logEntries: LogEntry[]) => void;
+}
+
+const HistoryTable: React.FC<HistoryTableProps> = ({ openLogsWindow }) => {
   const location = useLocation();
   const task = location.state as ExtendedTask;
   const { data: history } = useFetch<History[]>(
@@ -35,7 +40,11 @@ const HistoryTable = () => {
         </thead>
         <tbody>
           {history?.map((h) => (
-            <HistoryRow key={h.runStartTimestamp} history={h} />
+            <HistoryRow
+              key={h.runStartTimestamp}
+              history={h}
+              openLogsWindow={openLogsWindow}
+            />
           ))}
         </tbody>
       </table>

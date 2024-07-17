@@ -1,10 +1,11 @@
-import { History } from "../../../lib";
+import { History, LogEntry } from "../../../lib";
 
 interface HistoryRowProps {
   history: History;
+  openLogsWindow: (logEntries: LogEntry[]) => void;
 }
 
-const HistoryRow: React.FC<HistoryRowProps> = ({ history }) => {
+const HistoryRow: React.FC<HistoryRowProps> = ({ history, openLogsWindow }) => {
   const runStart = new Date(history.runStartTimestamp);
   const runStartString = runStart
     .toISOString()
@@ -31,7 +32,12 @@ const HistoryRow: React.FC<HistoryRowProps> = ({ history }) => {
         {history.totalSettlements ? history.totalSettlements : 0}
       </HistoryCell>
       <HistoryCell>
-        <button className="text-blue-500">View</button>
+        <button
+          className="text-blue-500"
+          onClick={() => openLogsWindow(history.logEntries)}
+        >
+          View
+        </button>
       </HistoryCell>
     </tr>
   );
