@@ -28,7 +28,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
         <div key={field.name} className="flex flex-col mb-4">
           <label
             htmlFor={field.name}
-            className="block text-white text-sm font-bold mb-2"
+            className="block text-white text-sm font-bold mb-2 "
           >
             {field.label}
           </label>

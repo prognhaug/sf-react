@@ -8,6 +8,7 @@ import {
 } from "../../../../lib";
 import { InstanceFormData } from "./InstanceForm";
 import { ConnectionContext } from "../../../../context/";
+import { Dropdown } from "../../../../layouts";
 
 type SolutionsFormProps = {
   updateFields: (fields: Partial<InstanceFormData>) => void;
@@ -44,8 +45,8 @@ export function SelectForm({
     return (systemID as System).name !== undefined;
   };
 
-  const handleConnectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedConnectionId = e.target.value;
+  const handleConnectionChange = (value: string) => {
+    const selectedConnectionId = value;
     const selectedConnection = connections?.find(
       (connection) => connection._id === selectedConnectionId
     );
@@ -73,59 +74,44 @@ export function SelectForm({
 
   return (
     <FormWrapper title="Select Solution">
-      <label
-        className="block text-white text-sm font-bold mb-2"
-        htmlFor="solution"
-      >
-        Solution
-      </label>
-      <select
-        value={selectedSolution}
-        id="solution"
-        name="solution"
-        onChange={(e) => handleSolutionFieldChange(e.target.value)}
-        required
-        className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
-        // defaultValue=""
-      >
-        <option value="" disabled>
-          Select Solution
-        </option>
-        {solutions.map((solution) => (
-          <option key={solution._id} value={solution._id}>
-            {solution.name}
-          </option>
-        ))}
-      </select>
+      <div className="text-center">
+        <label
+          className="block text-white text-sm font-bold mb-2"
+          htmlFor="solution"
+        >
+          Solution
+        </label>
+        <Dropdown
+          choices={solutions.map((solution) => ({
+            _id: solution._id,
+            name: solution.name,
+          }))}
+          onSelect={(value) => handleSolutionFieldChange(value)}
+          dropdownName="Solution"
+        />
+      </div>
       {additionalFields.map((field, index) =>
         field.type === "dropdown" ? (
           <React.Fragment key={index}>
             <label
-              className="block text-white text-sm font-bold mb-2"
+              className="block text-white text-sm font-bold mb-2 pt-4"
               htmlFor={field.name}
             >
               {field.label}
             </label>
-            <select
-              id={field.name}
-              name={field.name}
-              onChange={handleConnectionChange}
-              required
-              className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
-              defaultValue=""
-            >
-              <option value="">Select an Option</option>
-              {getFilteredConnections(field.name).map((connection, idx) => (
-                <option key={idx} value={connection._id}>
-                  {connection.name}
-                </option>
-              ))}
-            </select>
+            <Dropdown
+              choices={getFilteredConnections(field.name).map((connection) => ({
+                _id: connection._id,
+                name: connection.name,
+              }))}
+              onSelect={(value) => handleConnectionChange(value)}
+              dropdownName="Connection"
+            />
           </React.Fragment>
         ) : (
           <React.Fragment key={index}>
             <label
-              className="block text-white text-sm font-bold mb-2"
+              className="block text-white text-sm font-bold mb-2 "
               htmlFor={field.name}
             >
               {field.label}
@@ -136,7 +122,7 @@ export function SelectForm({
               name={field.name}
               onChange={(e) => updateFields({ [field.name]: e.target.value })}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
+              className="shadow  appearance-none backdrop-blur-lg bg-white/10 border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
             />
           </React.Fragment>
         )

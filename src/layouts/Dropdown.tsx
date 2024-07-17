@@ -8,9 +8,14 @@ interface Choice {
 interface DropdownProps {
   choices: Choice[];
   onSelect: (_id: string) => void;
+  dropdownName: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ choices, onSelect }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  choices,
+  onSelect,
+  dropdownName,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
 
@@ -28,10 +33,10 @@ const Dropdown: React.FC<DropdownProps> = ({ choices, onSelect }) => {
         id="dropdownDefaultButton"
         data-dropdown-toggle="dropdown"
         onClick={handleToggleDropdown}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="text-white backdrop-blur-lg bg-white/10 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
         type="button"
       >
-        {selectedChoice ? selectedChoice.name : "Dropdown button"}
+        {selectedChoice ? selectedChoice.name : `Select ${dropdownName}`}
         <svg
           className="w-2.5 h-2.5 ml-2"
           aria-hidden="true"
@@ -52,17 +57,17 @@ const Dropdown: React.FC<DropdownProps> = ({ choices, onSelect }) => {
       {isOpen && (
         <div
           id="dropdown"
-          className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute"
+          className="z-10 rounded-lg dark:bg-black/90 absolute w-auto "
         >
           <ul
-            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+            className="py-2 text-sm  text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownDefaultButton"
           >
             {choices.map((choice) => (
               <li key={choice._id}>
                 <button
                   type="button"
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  className="block w-full text-left px-4 py-2  hover:bg-gray-100 dark:hover:bg-black/20 dark:hover:text-white"
                   onClick={() => handleSelectChoice(choice)}
                 >
                   {choice.name}

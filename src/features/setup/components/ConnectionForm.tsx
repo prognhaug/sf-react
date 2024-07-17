@@ -6,6 +6,7 @@ import { CompanyContext } from "../../../context/";
 import { Icon } from "../../../components/";
 import ReactDOM from "react-dom";
 import { useFetch } from "../../../hooks";
+import { Dropdown } from "../../../layouts";
 
 interface ConnectionFormProps {
   onClose: () => void;
@@ -81,28 +82,23 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({
         >
           <Icon name="xcircle" className="text-white" />
         </button>
-        <div className="mb-4">
+        <div className="mb-4 text-center">
           <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="systemSelect"
           >
-            Select System
+            System
           </label>
-          <select
-            id="systemSelect"
-            className="shadow border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
-            value={selectedSystemId ? selectedSystemId : ""}
-            onChange={(e) => setSelectedSystemId(e.target.value)}
-          >
-            <option value="" disabled>
-              Select System
-            </option>
-            {systems?.map((system) => (
-              <option key={system._id} value={system._id}>
-                {system.name}
-              </option>
-            ))}
-          </select>
+          <Dropdown
+            choices={
+              systems?.map((system) => ({
+                _id: system._id,
+                name: system.name,
+              })) || []
+            }
+            onSelect={(value) => setSelectedSystemId(value)}
+            dropdownName="System"
+          />
         </div>
         <div>
           {selectedSystemId &&
@@ -115,7 +111,7 @@ const ConnectionForm: React.FC<ConnectionFormProps> = ({
                 <input
                   type={field.type}
                   name={field.name}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-white bg-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow backdrop-blur-lg bg-white/10 appearance-none border rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
             ))}
