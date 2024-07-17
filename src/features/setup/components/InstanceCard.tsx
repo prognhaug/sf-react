@@ -26,15 +26,13 @@ const InstanceCard = (instance: Instance) => {
         {solutionName}
       </h5>
 
-      <tr>
+      <div className="flex justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
         {instanceConnections?.map((connection) => (
-          <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {connection.name}
-            </span>
-          </td>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {connection.name}
+          </span>
         ))}
-      </tr>
+      </div>
     </>
   );
 };
