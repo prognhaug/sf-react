@@ -1,21 +1,54 @@
-import CompanyDetails from "../../components/CompanyDetails";
-import InstanceCard from "../../components/InstanceCard";
-import ConnectionCard from "../../components/ConnectionCard";
-import { CompanyContext } from "../../context/CompanyContext";
+import {
+  InstanceCard,
+  ConnectionCard,
+  ConnectionForm,
+  InstanceForm,
+  EntityCard,
+} from "../../features/";
+import { CompanyContext } from "../../context/";
 import { useContext, useState } from "react";
-import { InstanceContext } from "../../context/InstanceContext";
-import { ConnectionContext } from "../../context/ConnectionContext";
-import InstanceForm from "../../components/InstanceForm/InstanceForm";
-import ConnectionForm from "../../components/ConnectionForm";
-import { Solution } from "../../models/types";
+import { Solution } from "../../lib/";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { fetchApiData } from "../../utils/apiHandler-copy";
+import { fetchApiData } from "../../utils/apiHandler";
+import { useFetch } from "../../hooks/";
+import { Instance, Connection } from "../../lib/";
+import {
+  useUpdateInstancesContext,
+  useUpdateConnectionsContext,
+} from "../../hooks/";
+// import { EntityCard } from "../../layouts/";
+
+const instanceParamsObject = {
+  fields: "solutionID",
+  filter: '{ "active": "true" }',
+};
+
+const connectionParamsObject = {
+  fields: "systemID",
+};
 
 const Setup = () => {
   const [showInstanceForm, setShowInstanceForm] = useState(false);
   const [showConnectionForm, setShowConnectionForm] = useState(false);
   const [solutions, setSolutions] = useState<Solution[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = useState(false);
   const authHeader = useAuthHeader();
+  const { company } = useContext(CompanyContext);
+
+  const { data: instances } = useFetch<Instance[]>(
+    company ? `/api/instances/${company.companyID}` : "",
+    instanceParamsObject,
+    [company, triggerRefresh]
+  );
+
+  const { data: connections } = useFetch<Connection[]>(
+    company ? `/api/connections/${company.companyID}` : "",
+    connectionParamsObject,
+    [company, triggerRefresh]
+  );
+
+  useUpdateInstancesContext(instances);
+  useUpdateConnectionsContext(connections);
 
   const toggleInstanceForm = () => {
     setShowInstanceForm(true);
@@ -40,9 +73,9 @@ const Setup = () => {
       fetchSolutions();
     }
   };
-  const { company } = useContext(CompanyContext);
-  const { instances } = useContext(InstanceContext);
-  const { connections } = useContext(ConnectionContext);
+  const refresh = () => {
+    setTriggerRefresh((prevState) => !prevState);
+  };
   const fetchSolutions = async () => {
     try {
       const response = await fetchApiData<Solution[]>(
@@ -50,60 +83,91 @@ const Setup = () => {
         { filter: '{ "active": "true" }' },
         authHeader
       );
-      if (response !== null) {
-        setSolutions(response);
-      } else {
-        console.error("Failed to fetch solutions or unauthorized");
-      }
+      setSolutions(response);
     } catch (error) {
       console.error("Failed to fetch solutions:", error);
     }
   };
+
   return (
-    <div className="flex-1 flex flex-col items-center">
-      <h1 className="text-white mt-4 mb-2">Setup Page</h1>
-      <div className="w-full p-4">
+    <div className="flex-1 flex flex-col items-center w-full px-5">
+      <h1 className="text-3xl font-bold dark:text-white mb-4 mt-4">Setup</h1>
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-500 w-full" />
+      <div className="w-full px-2">
         {company && (
           <div>
-            <h2 className="text-white mb-2">Company Details</h2>
-            <CompanyDetails company={company} />
+            <h2 className="text-3xl font-bold dark:text-white mb-4 justify-center flex">
+              {company.name}
+            </h2>
+
+            <h2 className="text-3xl font-bold dark:text-white mb-2 justify-center flex pt-4">
+              Instances
+            </h2>
+            <div className="flex justify-center pb-2">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
+                onClick={() =>
+                  solutions.length > 0 ? handleClick(false) : handleClick(true)
+                }
+              >
+                Add instance
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {instances?.map((instance, index) => (
+                <div key={index}>
+                  <EntityCard
+                    entity={instance}
+                    triggerRefresh={refresh}
+                    apiEndpoint="/api/instances"
+                    customUI={
+                      <InstanceCard
+                        instance={instance}
+                        connections={connections || []}
+                      />
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+
+            <h2 className="text-3xl font-bold dark:text-white mb-2 justify-center flex pt-4">
+              Connections{" "}
+            </h2>
+            <div className="flex justify-center pb-2">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
+                onClick={toggleConnectionForm}
+              >
+                Add connection
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {connections?.map((connection, index) => (
+                <div key={index}>
+                  <EntityCard
+                    entity={connection}
+                    triggerRefresh={refresh}
+                    apiEndpoint="/api/connections"
+                    customUI={ConnectionCard(connection)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         )}
-        <div>
-          <h2 className="text-white mb-2">
-            Instances{" "}
-            <button
-              onClick={() =>
-                solutions.length > 0 ? handleClick(false) : handleClick(true)
-              }
-            >
-              +
-            </button>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {instances?.map((instance, index) => (
-              <div key={index}>
-                <InstanceCard instance={instance} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h2 className="text-white mb-2">
-            Connections <button onClick={toggleConnectionForm}>+</button>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {connections?.map((connection, index) => (
-              <div key={index}>
-                <ConnectionCard connection={connection} />
-              </div>
-            ))}
-          </div>
-        </div>
         {showConnectionForm && (
-          <ConnectionForm onClose={handleCloseConnectionForm} />
+          <ConnectionForm
+            onClose={handleCloseConnectionForm}
+            triggerRefresh={refresh}
+          />
         )}
-        {showInstanceForm && <InstanceForm onClose={handleCloseInstanceForm} />}
+        {showInstanceForm && (
+          <InstanceForm
+            onClose={handleCloseInstanceForm}
+            triggerRefresh={refresh}
+          />
+        )}
         {/* {showInstanceForm && (
             <InstanceForm
               onClose={handleCloseInstanceForm}
