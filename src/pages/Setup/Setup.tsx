@@ -16,6 +16,7 @@ import {
   useUpdateInstancesContext,
   useUpdateConnectionsContext,
 } from "../../hooks/";
+import { EntityCard } from "../../layouts/";
 
 const instanceParamsObject = {
   fields: "solutionID",
@@ -109,7 +110,12 @@ const Setup = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {instances?.map((instance, index) => (
                 <div key={index}>
-                  <InstanceCard instance={instance} triggerRefresh={refresh} />
+                  <EntityCard
+                    entity={instance}
+                    triggerRefresh={refresh}
+                    apiEndpoint="/api/instances"
+                    customUI={InstanceCard(instance)}
+                  />
                 </div>
               ))}
             </div>
@@ -120,9 +126,11 @@ const Setup = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {connections?.map((connection, index) => (
                 <div key={index}>
-                  <ConnectionCard
-                    connection={connection}
+                  <EntityCard
+                    entity={connection}
                     triggerRefresh={refresh}
+                    apiEndpoint="/api/connections"
+                    customUI={ConnectionCard(connection)}
                   />
                 </div>
               ))}
