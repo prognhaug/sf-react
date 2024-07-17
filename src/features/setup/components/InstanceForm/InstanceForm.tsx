@@ -174,7 +174,7 @@ const InstanceForm: React.FC<InstanceFormProps> = ({
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="relative w-full max-w-md p-4 bg-gray-800 rounded-lg shadow-md mx-auto">
+      <div className="relative w-full max-w-md p-4 backdrop-blur-lg bg-white/10 rounded-lg shadow-md mx-auto">
         <button
           onClick={onClose}
           aria-label="Close instance form"

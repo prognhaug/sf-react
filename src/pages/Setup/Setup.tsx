@@ -91,9 +91,7 @@ const Setup = () => {
 
   return (
     <div className="flex-1 flex flex-col items-center w-full px-5">
-      <h1 className="text-3xl font-bold dark:text-white mb-4 mt-4">
-        Setup Page
-      </h1>
+      <h1 className="text-3xl font-bold dark:text-white mb-4 mt-4">Setup</h1>
       <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-500 w-full" />
       <div className="w-full px-2">
         {company && (

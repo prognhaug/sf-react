@@ -38,7 +38,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
             name={field.name}
             value={formData[field.name] || ""}
             onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-white bg-gray-700 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-white backdrop-blur-lg bg-white/10 border-gray-600 leading-tight focus:outline-none focus:border-gray-500"
           />
         </div>
       ))}
