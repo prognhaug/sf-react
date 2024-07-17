@@ -1,7 +1,6 @@
 import { History } from "../../../lib";
 import useFetch from "../../../hooks/useFetch";
 import HistoryRow from "./HistoryRow";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ExtendedTask } from "../../../lib";
 import { LogEntry } from "../../../lib";
@@ -16,9 +15,6 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ openLogsWindow }) => {
   const { data: history } = useFetch<History[]>(
     `/api/instances/${task.data.companyID}/${task.data.instanceID}/history`
   );
-  useEffect(() => {
-    console.log("history", history);
-  }, [history]);
   return (
     <div className="relative overflow-x-auto p-3 ">
       <h2 className="text-3xl font-bold dark:text-white mb-4 mt-4 text-center">
@@ -41,7 +37,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ openLogsWindow }) => {
         <tbody>
           {history?.map((h) => (
             <HistoryRow
-              key={h.runStartTimestamp}
+              key={h._id}
               history={h}
               openLogsWindow={openLogsWindow}
             />

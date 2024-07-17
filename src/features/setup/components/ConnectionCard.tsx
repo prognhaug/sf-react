@@ -13,7 +13,6 @@ const ConnectionCard = (connection: Connection) => {
     : "";
 
   const renderSystemIcon = (systemName: string) => {
-    console.log(systemName);
     switch (systemName) {
       case "Tripletex":
         return <Tripletex className="w-40 h-40" />;
