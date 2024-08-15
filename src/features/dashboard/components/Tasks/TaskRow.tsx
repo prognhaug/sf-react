@@ -18,11 +18,19 @@ const TaskRow: React.FC<{ task: ExtendedTask }> = ({ task }) => {
     setIsActive(newState);
     try {
       if (newState) {
-        (await postApiData(`/api/tasks/activate/${task._id}`, {}, authHeader))
+        (await postApiData(
+          `/api/tasks/activate/${task.instanceID}`,
+          {},
+          authHeader
+        ))
           ? null
           : setIsActive(!newState);
       } else {
-        (await postApiData(`/api/tasks/deactivate/${task._id}`, {}, authHeader))
+        (await postApiData(
+          `/api/tasks/deactivate/${task.instanceID}`,
+          {},
+          authHeader
+        ))
           ? null
           : setIsActive(!newState);
       }

@@ -117,20 +117,22 @@ export interface Event {
   };
 }
 
-export interface DataType {
-  instanceID: string; // Assuming instanceID is a string representation of ObjectId
-  companyID: number;
-  debugMode: boolean;
-}
+// export interface DataType {
+//   instanceID: string; // Assuming instanceID is a string representation of ObjectId
+//   companyID: number;
+//   debugMode: boolean;
+// }
 export interface Task {
   _id: string;
   name: string;
-  data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
+  instanceID: string;
+  companyID: number;
+  // data: DataType; // Assuming DataType is defined elsewhere according to dataSchema
   active: boolean;
   lastRunDate?: string | null;
-  nextRunDate: string;
+  nextRunDate: string | null;
   lastRunSuccess?: boolean | null;
-  interval: number;
+  interval: string;
   createdAt?: string; // Automatically added by mongoose timestamps
   updatedAt?: string; // Automatically added by mongoose timestamps
 }

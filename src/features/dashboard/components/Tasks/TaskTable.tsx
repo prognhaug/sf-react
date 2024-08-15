@@ -13,7 +13,7 @@ const TaskTable = () => {
   const mergeTasksWithCompanies = (tasks: Task[], companies: Company[]) => {
     return tasks.map((task) => {
       const companyInfo = companies.find(
-        (company) => company.companyID === task.data.companyID
+        (company) => company.companyID === task.companyID
       );
       return { ...task, companyInfo };
     });

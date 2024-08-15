@@ -13,7 +13,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ openLogsWindow }) => {
   const location = useLocation();
   const task = location.state as ExtendedTask;
   const { data: history } = useFetch<History[]>(
-    `/api/instances/${task.data.companyID}/${task.data.instanceID}/history`
+    `/api/instances/${task.companyID}/${task.instanceID}/history`
   );
   return (
     <div className="relative overflow-x-auto p-3 ">
