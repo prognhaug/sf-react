@@ -20,7 +20,7 @@ import {
 
 const instanceParamsObject = {
   fields: "solutionID",
-  filter: '{ "active": "true" }',
+  filter: '{ "deleted": "false" }',
 };
 
 const connectionParamsObject = {
