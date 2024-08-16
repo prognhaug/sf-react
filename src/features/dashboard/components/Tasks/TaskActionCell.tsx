@@ -18,7 +18,15 @@ const TaskActionCell = ({ isActive, task }: TaskActionCellProps) => {
   const handleStart = async () => {
     setIsLoading(true);
     try {
-      await postApiData(`/api/tasks/run/${task.instanceID}`, {}, authHeader);
+      await postApiData(
+        `/api/tasks/run/`,
+        {
+          instanceID: task.instanceID,
+          companyID: task.companyID,
+          debugMode: false,
+        },
+        authHeader
+      );
     } catch (error) {
       console.error("API call failed:", error);
     }
